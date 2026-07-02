@@ -23,11 +23,11 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install claude-ai
+          pip install anthropic
 
       - name: Run Claude code check
         run: |
-          python -c "from claude_ai import Claude; print('Claude package installed', Claude)"
+          python -c "import anthropic; print('Anthropic package installed:', anthropic.__version__)"
 
   claude-code-review:
     runs-on: ubuntu-latest
