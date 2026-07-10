@@ -6,3 +6,12 @@ test_that("core model functions are defined", {
   expect_true(is.function(waiind:::get_real_time_gdp_vintages))
   expect_true(is.function(waiind:::get_combined_cor_table))
 })
+
+test_that("shipped datasets have the structure hfdfm() expects", {
+  expect_named(data_ch_dataset, c("flows", "stocks"))
+  expect_named(data_ch_dataset_test, c("flows", "stocks"))
+  # Only the test variant ships the GDP target; the full dataset gets it
+  # injected at runtime from the real-time vintage database.
+  expect_true("ch.seco.gdp.real.gdp.ssa" %in% names(data_ch_dataset_test$flows))
+  expect_true(all(vapply(data_ch_dataset$flows, stats::is.ts, logical(1))))
+})
