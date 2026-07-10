@@ -88,27 +88,15 @@ dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 # reading files, parsing dates, harmonizing daily data to weekly data, applying
 # seasonal adjustment, and exporting diagnostic objects.
 
-# Add common user package libraries so package-based readers also work under Rscript.
-lib_candidates <- unique(c(
-  Sys.getenv("R_LIBS_USER"),
-  file.path(Sys.getenv("USERPROFILE"), "R4UserLibs")
-))
-lib_candidates <- lib_candidates[nzchar(lib_candidates)]
-existing_libs <- lib_candidates[dir.exists(lib_candidates)]
-if (length(existing_libs)) {
-  .libPaths(c(existing_libs, .libPaths()))
-}
-
-# Install and load the main helper packages used by the legacy prep file.
-required_pkgs <- c("openxlsx", "zoo", "forecast", "dplyr", "tsbox", "tseries")
-missing_pkgs <- required_pkgs[!vapply(required_pkgs, requireNamespace, logical(1), quietly = TRUE, lib.loc = .libPaths())]
-if (length(missing_pkgs)) {
-  lib_target <- if (length(existing_libs)) existing_libs[1] else lib_candidates[1]
-  if (!dir.exists(lib_target)) dir.create(lib_target, recursive = TRUE, showWarnings = FALSE)
-  utils::install.packages(missing_pkgs, repos = "https://cloud.r-project.org", lib = lib_target)
-  .libPaths(c(lib_target, .libPaths()))
-}
-suppressPackageStartupMessages(invisible(lapply(required_pkgs, library, character.only = TRUE)))
+# Helper packages used by the prep pipeline. All are declared in the package
+# DESCRIPTION (Imports/Suggests); install them once via
+# remotes::install_deps(dependencies = TRUE) instead of installing at runtime.
+library(openxlsx)
+library(zoo)
+library(forecast)
+library(dplyr)
+library(tsbox)
+library(tseries)
 source(file.path(project_dir, "code", "lib", "functions_backcast.R"))
 
 # Load variable metadata that controls source ordering, frequency, and transformation.

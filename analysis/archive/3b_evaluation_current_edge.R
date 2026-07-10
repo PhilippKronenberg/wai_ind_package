@@ -63,7 +63,9 @@ plot.ts(window(aux, start = 1990), plot.type="single", col = c(1,2,2))
 
 # PLOT HISTORY ------------------------------------------------------------
 
-library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
 library(zoo)
 library(ggpubr)
 library(scales)

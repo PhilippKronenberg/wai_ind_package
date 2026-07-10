@@ -3,7 +3,12 @@ cat("\014")
 
 # PACKAGES AND FUNCTIONS --------------------------------------------------
 
-library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(tibble)
+library(purrr)
+library(readr)
+library(ggplot2)
 library(zoo)
 library(readxl)
 
