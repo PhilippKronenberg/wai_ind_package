@@ -14,6 +14,7 @@ Description: Estimates a weekly activity index (WAI) for Switzerland and
     tables and plots used in the accompanying analysis.
 License: MIT + file LICENSE
 Encoding: UTF-8
+LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Depends:
