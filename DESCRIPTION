@@ -1,17 +1,57 @@
 Package: waiind
 Type: Package
-Title: WAI Individual Package
+Title: Swiss Weekly Activity Index from a Mixed-Frequency Dynamic Factor Model
 Version: 0.0.0.9000
 Authors@R:
     person("Philipp", "Kronenberg", email = "PhilippKronenberg@users.noreply.github.com",
            role = c("aut", "cre"))
-Description: A starter R package that provides a basic environment for
-    developing, documenting and testing R functions. Replace this
-    description with a summary of what the package does.
+Description: Estimates a weekly activity index (WAI) for Switzerland and
+    produces weekly GDP nowcasts and backcasts. The core is a Bayesian
+    mixed-frequency dynamic factor model estimated by Markov chain Monte
+    Carlo sampling, with optional stochastic volatility and serial
+    correlation components. The package also provides tools for real-time
+    GDP vintage handling, out-of-sample forecast evaluation, and the
+    tables and plots used in the accompanying analysis.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
+Depends:
+    R (>= 4.1)
+Imports:
+    broom,
+    dplyr,
+    forecast,
+    ggplot2,
+    ggpubr,
+    graphics,
+    ISOweek,
+    kableExtra,
+    knitr,
+    lubridate,
+    Matrix,
+    Metrics,
+    plyr,
+    purrr,
+    readxl,
+    scales,
+    stats,
+    tibble,
+    tidyr,
+    utils,
+    zoo
 Suggests:
-    testthat (>= 3.0.0)
+    doParallel,
+    foreach,
+    ggsci,
+    openxlsx,
+    pammtools,
+    RColorBrewer,
+    readr,
+    reshape2,
+    strucchange,
+    testthat (>= 3.0.0),
+    tsbox,
+    tseries,
+    xtable
 Config/testthat/edition: 3

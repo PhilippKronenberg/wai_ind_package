@@ -4,7 +4,8 @@ cat("\014")
 
 # PACKAGES AND FUNCTIONS --------------------------------------------------
 
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
 
 # PRELIM ------------------------------------------------------------------
 
