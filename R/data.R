@@ -11,7 +11,9 @@
 #'   \item{flows}{Named list of 45 `ts` objects treated as flow
 #'     variables. The quarterly GDP target series is *not* included;
 #'     the analysis scripts add it at runtime from the real-time GDP
-#'     vintage database (see `get_real_time_gdp_vintages()`).}
+#'     vintage database that ships with the package at
+#'     `system.file("extdata", "realtime_database_GDP.xlsx", package = "waiind")`
+#'     (see `get_real_time_gdp_vintages()`).}
 #'   \item{stocks}{Named list of 7 `ts` objects treated as stock
 #'     variables.}
 #' }
