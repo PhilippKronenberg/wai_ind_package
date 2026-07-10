@@ -1,0 +1,31 @@
+\begin{table}[!h]
+\centering
+\caption{In-sample relative RMSE by lag and aggregation method for WAI versions}
+\centering
+\begin{tabu} to \linewidth {>{\raggedright\arraybackslash}p{2.3cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}}
+\toprule
+\multicolumn{1}{c}{ } & \multicolumn{5}{c}{YoY} & \multicolumn{5}{c}{QoQ} \\
+\cmidrule(l{3pt}r{3pt}){2-6} \cmidrule(l{3pt}r{3pt}){7-11}
+Lags & -4 & -3 & -2 & -1 & 0 & -4 & -3 & -2 & -1 & 0\\
+\midrule
+\textbf{\textbf{Mean}} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+WAI & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & \vphantom{2} 1.00\\
+WAI-SV & 0.91 & 0.87 & 0.86 & 0.85 & 2.96*** & 0.84 & 0.84 & 0.84 & 0.85 & 4.71***\\
+WAI-(SV+HF) & 0.89 & 0.91 & 0.99 & 1.20 & 18.62*** & 0.83 & 0.84 & 0.84 & 0.85 & 2.13\\
+WAI-HF & 0.90 & 0.91 & 0.99 & 1.18 & 18.44*** & 0.84 & 0.84 & 0.84 & 0.83 & 15.21***\\
+WAI-FIN & 0.91 & 0.88 & 0.87 & 0.85 & 0.80 & 0.84 & 0.84 & 0.84 & 0.85 & 1.07\\
+\textbf{\textbf{Last}} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+WAI & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & \vphantom{1} 1.00\\
+WAI-SV & 0.89 & 0.89 & 0.95 & 1.38 & 1.75*** & 0.83 & 0.84 & 0.87 & 3.20*** & 0.88\\
+WAI-(SV+HF) & 0.88 & 0.94 & 1.07 & 1.87*** & 2.23*** & 0.84 & 0.84 & 0.87 & 3.08*** & 0.88\\
+WAI-HF & 0.89 & 0.94 & 1.07 & 1.83*** & 2.17*** & 0.84 & 0.84 & 0.87 & 2.10** & 0.76\\
+WAI-FIN & 0.89 & 0.87 & 0.87 & 0.71 & 1.04 & 0.84 & 0.84 & 0.84 & 1.04 & 0.87\\
+\textbf{\textbf{Last Month}} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+WAI & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00\\
+WAI-SV & 0.90 & 0.89 & 0.93 & 1.07 & 2.46*** & 0.84 & 0.84 & 0.86 & 3.54*** & 0.87\\
+WAI-(SV+HF) & 0.88 & 0.93 & 1.03 & 1.42 & 3.74*** & 0.84 & 0.84 & 0.86 & 3.39*** & 0.87\\
+WAI-HF & 0.89 & 0.93 & 1.03 & 1.39 & 3.65*** & 0.84 & 0.84 & 0.86 & 2.31*** & 0.75\\
+WAI-FIN & 0.90 & 0.87 & 0.86 & 0.76 & 1.07 & 0.84 & 0.84 & 0.83 & 1.05 & 0.87\\
+\bottomrule
+\end{tabu}
+\end{table}

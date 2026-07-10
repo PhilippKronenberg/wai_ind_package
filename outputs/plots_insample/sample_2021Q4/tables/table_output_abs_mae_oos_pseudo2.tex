@@ -1,0 +1,37 @@
+\begin{table}[!h]
+\centering
+\caption{Pseudo out-of-sample absolute MAE by lag and aggregation method}
+\centering
+\begin{tabu} to \linewidth {>{\raggedright\arraybackslash}p{2.3cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}}
+\toprule
+\multicolumn{1}{c}{ } & \multicolumn{5}{c}{YoY} & \multicolumn{5}{c}{QoQ} \\
+\cmidrule(l{3pt}r{3pt}){2-6} \cmidrule(l{3pt}r{3pt}){7-11}
+Lags & -4 & -3 & -2 & -1 & 0 & -4 & -3 & -2 & -1 & 0\\
+\midrule
+\textbf{\textbf{Last}} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+WAI & 0.01 & 0.01 & 0.01 & 0.01 & 0.00 & 0.03 & 0.03 & 0.03 & 0.01 & \vphantom{1} 0.02\\
+AR & 0.02* & 0.02** & 0.01*** & 0.01*** & 0.01*** & 0.03 & 0.03 & 0.03 & 0.03*** & 0.03*\\
+SECO-WWA & 0.01 & 0.01 & 0.01* & 0.01** & 0.01*** & 0.03* & 0.03* & 0.03* & 0.03** & \vphantom{1} 0.03\\
+F-CURVE & 0.01 & 0.01 & 0.01 & 0.01 & 0.01*** & 0.03 & 0.03 & 0.03 & 0.02** & \vphantom{1} 0.02\\
+SECO-SEC & 0.01 & 0.01 & 0.01 & 0.01 & 0.01*** & 0.02 & 0.02 & 0.02 & 0.02** & \vphantom{1} 0.02\\
+SNB-BCI & 0.02 & 0.01 & 0.01 & 0.01 & 0.01*** & 0.03 & 0.03 & 0.03 & 0.02** & \vphantom{1} 0.02\\
+KOF-BARO & 0.01 & 0.01 & 0.01 & 0.01*** & 0.01*** & 0.03 & 0.02 & 0.02 & 0.03*** & 0.02\\
+\textbf{\textbf{Last Month}} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+WAI & 0.01 & 0.01 & 0.01 & 0.01 & 0.00 & 0.03 & 0.03 & 0.03 & 0.02 & 0.02\\
+AR & 0.02* & 0.02** & 0.01*** & 0.01*** & 0.01*** & 0.03 & 0.03 & 0.03 & 0.03*** & 0.03\\
+SECO-WWA & 0.01 & 0.01 & 0.01* & 0.01** & 0.01*** & 0.03* & 0.03* & 0.03* & 0.03** & 0.03\\
+F-CURVE & 0.01 & 0.01 & 0.01 & 0.01 & 0.01*** & 0.03 & 0.03 & 0.03 & 0.02** & 0.02\\
+SECO-SEC & 0.01 & 0.01 & 0.01 & 0.01 & 0.01*** & 0.02 & 0.02 & 0.02 & 0.02** & 0.02\\
+SNB-BCI & 0.02 & 0.01 & 0.01 & 0.01 & 0.01*** & 0.03 & 0.03 & 0.03 & 0.02** & 0.02\\
+KOF-BARO & 0.01 & 0.01 & 0.01 & 0.01** & 0.01*** & 0.03 & 0.02 & 0.02 & 0.03** & 0.02\\
+\textbf{\textbf{Mean}} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+WAI & 0.01 & 0.01 & 0.01 & 0.01 & 0.00 & 0.03 & 0.03 & 0.03 & 0.01 & 0.02\\
+AR & 0.02* & 0.02** & 0.01*** & 0.01*** & 0.01*** & 0.03 & 0.03 & 0.03 & 0.03*** & 0.03***\\
+SECO-WWA & 0.01 & 0.01 & 0.01** & 0.01*** & 0.01*** & 0.03* & 0.03* & 0.03* & 0.03** & 0.03**\\
+F-CURVE & 0.01 & 0.01 & 0.01 & 0.01 & 0.01*** & 0.03 & 0.03 & 0.03 & 0.02** & 0.02***\\
+SECO-SEC & 0.01 & 0.01 & 0.01 & 0.01 & 0.01*** & 0.02 & 0.02 & 0.02 & 0.02** & 0.02***\\
+SNB-BCI & 0.01 & 0.01 & 0.01 & 0.01* & 0.01*** & 0.03 & 0.03 & 0.03 & 0.02** & 0.02\\
+KOF-BARO & 0.01 & 0.01 & 0.01 & 0.01*** & 0.01*** & 0.03 & 0.02 & 0.02 & 0.03*** & 0.02***\\
+\bottomrule
+\end{tabu}
+\end{table}

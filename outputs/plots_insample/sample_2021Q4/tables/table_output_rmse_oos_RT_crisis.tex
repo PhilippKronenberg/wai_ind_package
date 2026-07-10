@@ -1,0 +1,37 @@
+\begin{table}[!h]
+\centering
+\caption{Real-time out-of-sample relative RMSE by lag, aggregation method, and crisis regime}
+\centering
+\begin{tabu} to \linewidth {>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}>{\raggedleft\arraybackslash}p{0.9cm}}
+\toprule
+\multicolumn{2}{c}{ } & \multicolumn{5}{c}{YoY} & \multicolumn{5}{c}{QoQ} \\
+\cmidrule(l{3pt}r{3pt}){3-7} \cmidrule(l{3pt}r{3pt}){8-12}
+Period & Lags & -4 & -3 & -2 & -1 & 0 & -4 & -3 & -2 & -1 & 0\\
+\midrule
+\textbf{} & \textbf{\textbf{Mean}} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+ & WAI & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & \vphantom{2} 1.00\\
+ & AR & 0.32 & 0.07 & 3.84 & 1.24 & 1.75 & 0.13 & 0.28 & 0.02 & 0.17 & 37.70\\
+ & SECO-WWA & 3.86 & 5.79 & 45.01 & 7.54 & 14.66 & 0.83 & 0.47 & 0.34 & 0.84 & 17.14\\
+ & F-CURVE & 0.13 & 0.21 & 4.85 & 1.48 & 4.86 & 0.91 & 1.04 & 0.52 & 1.01 & 24.51\\
+ & SECO-SEC & 2.25 & 3.27 & 27.20 & 5.01 & 8.84 & 1.02 & 0.67 & 0.46 & 0.82 & 22.34\\
+ & SNB-BCI & 0.50 & 0.12 & 3.19 & 0.87 & 3.55 & 0.39 & 0.37 & 0.35 & 1.02 & 17.96\\
+ & KOF-BARO & 0.17 & 0.06 & 3.34 & 1.04 & 0.88 & 0.07 & 0.08 & 0.08 & 0.56 & 7.82\\
+\textbf{} & \textbf{\textbf{Last}} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+ & WAI & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & \vphantom{1} 1.00\\
+ & AR & 0.31 & 0.07 & 11.82 & 1.35 & 1.31 & 0.14 & 0.31 & 0.03 & 0.19 & 1.49\\
+ & SECO-WWA & 3.93 & 5.71 & 144.02 & 8.63 & 11.11 & 0.82 & 0.46 & 0.42 & 0.93 & 0.76\\
+ & F-CURVE & 0.23 & 0.24 & 11.05 & 1.98 & 3.56 & 0.91 & 1.11 & 0.65 & 1.05 & 0.98\\
+ & SECO-SEC & 2.25 & 3.13 & 83.98 & 5.45 & 6.57 & 1.10 & 0.75 & 0.53 & 0.93 & 0.89\\
+ & SNB-BCI & 0.38 & 0.44 & 10.71 & 0.63 & 1.80 & 0.36 & 0.38 & 0.44 & 0.96 & 0.36\\
+ & KOF-BARO & 0.20 & 0.07 & 10.05 & 1.09 & 0.61 & 0.06 & 0.07 & 0.09 & 0.59 & 0.32\\
+\textbf{} & \textbf{\textbf{Last Month}} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+ & WAI & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00\\
+ & AR & 0.31 & 0.07 & 3.30 & 1.71 & 1.35 & 0.13 & 0.32 & 0.02 & 0.21 & 1.89\\
+ & SECO-WWA & 3.86 & 5.71 & 40.58 & 10.80 & 11.30 & 0.79 & 0.58 & 0.41 & 1.07 & 0.93\\
+ & F-CURVE & 0.25 & 0.32 & 4.48 & 2.63 & 3.80 & 0.86 & 1.13 & 0.57 & 1.01 & 1.17\\
+ & SECO-SEC & 2.22 & 3.11 & 23.47 & 6.91 & 6.80 & 1.07 & 0.77 & 0.47 & 1.00 & 1.13\\
+ & SNB-BCI & 0.37 & 0.44 & 2.99 & 0.80 & 1.86 & 0.35 & 0.40 & 0.39 & 1.03 & 0.46\\
+ & KOF-BARO & 0.20 & 0.07 & 2.81 & 1.38 & 0.63 & 0.06 & 0.08 & 0.08 & 0.63 & 0.41\\
+\bottomrule
+\end{tabu}
+\end{table}
