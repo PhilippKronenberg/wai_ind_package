@@ -3,3 +3,10 @@
 ^\.github$
 ^README\.md$
 ^\.gitattributes$
+^analysis$
+^data-raw$
+^hooks$
+^CLAUDE\.md$
+^\.claude$
+^\.mcp\.json$
+^\.playwright-mcp$
