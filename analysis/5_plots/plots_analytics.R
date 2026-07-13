@@ -11,9 +11,7 @@
 # for the currently active sample configuration.
 # -----------------------------------------------------------------------------
 
-source("code/5_plots/analytics_functions.R")
-load_analytics_packages()
-initialize_plots_insample_context()
+source("analysis/5_plots/_setup.R")
 
 
 # -----------------------------------------------------------------------------
@@ -22,6 +20,6 @@ initialize_plots_insample_context()
 # Run the data-preparation script first, then the in-sample outputs, and
 # finally the out-of-sample outputs.
 
-source("code/5_plots/analytics_data.R")
-source("code/5_plots/analytics_in_sample.R")
-source("code/5_plots/analytics_out-of-sample.R")
+source("analysis/5_plots/analytics_data.R")
+source("analysis/5_plots/analytics_in_sample.R")
+source("analysis/5_plots/analytics_out-of-sample.R")

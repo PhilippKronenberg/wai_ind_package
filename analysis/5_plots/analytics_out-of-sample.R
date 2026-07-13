@@ -12,8 +12,7 @@
 # source analytics_data.R first.
 # -----------------------------------------------------------------------------
 
-source("code/5_plots/analytics_functions.R")
-source("code/lib/functions_backcast.R")
+source("analysis/5_plots/_setup.R")
 
 library(dplyr)
 library(lubridate)
@@ -23,11 +22,8 @@ library(zoo)
 library(tibble)
 library(forecast)
 
-load_analytics_packages()
-initialize_plots_insample_context()
-
 if (!exists("plots_insample_data_ready", inherits = FALSE)) {
-  source("code/5_plots/analytics_data.R")
+  source("analysis/5_plots/analytics_data.R")
 }
 build_truncated_vintage_columns <- function(ref_values, ref_dates, new_dates) {
   new_cols <- lapply(new_dates, function(vintage_date) {
@@ -393,7 +389,7 @@ GDP_gr_vintages_annual_pseudo <- create_pseudo_gdp_vintages(
 
 # Import the KOF barometer real-time export and convert the vintage names into
 # standard date columns.
-file_path <- "data/benchmarks/kof_data_export_2026-03-27_17_49_11.xlsx"
+file_path <- "analysis/benchmarks/archive_data_benchmarks/kof_data_export_2025-06-23_09_05_05_real_time_vintages.xlsx"
 data_barro_vintages <- read_excel(file_path, col_names = TRUE, col_types = "numeric")
 data_barro_vintages[,1] <- read_excel(file_path, range = cell_cols(1))
 col_names <- colnames(data_barro_vintages)[-1]
@@ -475,7 +471,7 @@ list_of_tables <- split(plot_df_qoq, plot_df_qoq$Series) %>%
     # Combine time column and wide matrix
     bind_cols(tibble(time = df$time), wide_mat)
   })
-source("code/5_plots/run_plots_analytics_samples.R")
+source("analysis/5_plots/run_plots_analytics_samples.R")
 folder_path <- sample_config$fit_rt_dir
 files <- list.files(folder_path, pattern = "\\.Rda$", full.names = TRUE)
 list_of_qoq_tables <- list()
@@ -824,7 +820,8 @@ build_oos_crisis_tables <- function(total_tables, period_tables, sample_label, f
     )
     write_table_output(
       paste0("table_output_", tolower(metric_name), "_", file_stub, "_crisis_", method_name, ".tex"),
-      combined_result$table_tex
+      combined_result$table_tex,
+      tables_dir
     )
     
     combined_result
@@ -863,22 +860,22 @@ results_rmse_oos_pseudo <- create_combined_latex_table(
   error_tables_pseudo$rel_rmse[c("mean", "last", "last_month")],
   caption = "Pseudo out-of-sample relative RMSE by lag and aggregation method"
 )
-write_table_output("table_output_rmse_oos_pseudo3.tex", results_rmse_oos_pseudo$table_tex)
+write_table_output("table_output_rmse_oos_pseudo3.tex", results_rmse_oos_pseudo$table_tex, tables_dir)
 results_rmse_oos_RT <- create_combined_latex_table(
   error_tables_RT$rel_rmse[c("mean", "last", "last_month")],
   caption = "Real-time out-of-sample relative RMSE by lag and aggregation method"
 )
-write_table_output("table_output_rmse_oos_RT3.tex", results_rmse_oos_RT$table_tex)
+write_table_output("table_output_rmse_oos_RT3.tex", results_rmse_oos_RT$table_tex, tables_dir)
 results_mae_oos_pseudo <- create_combined_latex_table(
   error_tables_pseudo$rel_mae[c("mean", "last", "last_month")],
   caption = "Pseudo out-of-sample relative MAE by lag and aggregation method"
 )
-write_table_output("table_output_mae_oos_pseudo3.tex", results_mae_oos_pseudo$table_tex)
+write_table_output("table_output_mae_oos_pseudo3.tex", results_mae_oos_pseudo$table_tex, tables_dir)
 results_mae_oos_RT <- create_combined_latex_table(
   error_tables_RT$rel_mae[c("mean", "last", "last_month")],
   caption = "Real-time out-of-sample relative MAE by lag and aggregation method"
 )
-write_table_output("table_output_mae_oos_RT3.tex", results_mae_oos_RT$table_tex)
+write_table_output("table_output_mae_oos_RT3.tex", results_mae_oos_RT$table_tex, tables_dir)
 scaled_abs_rmse_oos_pseudo <- build_scaled_abs_oos_tables(
   error_tables_pseudo$summary,
   metric = "RMSE",
@@ -907,22 +904,22 @@ results_abs_rmse_oos_pseudo <- create_combined_latex_table(
   scaled_abs_rmse_oos_pseudo[c("mean", "last", "last_month")],
   caption = "Pseudo out-of-sample absolute RMSE by lag and aggregation method"
 )
-write_table_output("table_output_abs_rmse_oos_pseudo3.tex", results_abs_rmse_oos_pseudo$table_tex)
+write_table_output("table_output_abs_rmse_oos_pseudo3.tex", results_abs_rmse_oos_pseudo$table_tex, tables_dir)
 results_abs_rmse_oos_RT <- create_combined_latex_table(
   scaled_abs_rmse_oos_RT[c("mean", "last", "last_month")],
   caption = "Real-time out-of-sample absolute RMSE by lag and aggregation method"
 )
-write_table_output("table_output_abs_rmse_oos_RT3.tex", results_abs_rmse_oos_RT$table_tex)
+write_table_output("table_output_abs_rmse_oos_RT3.tex", results_abs_rmse_oos_RT$table_tex, tables_dir)
 results_abs_mae_oos_pseudo <- create_combined_latex_table(
   scaled_abs_mae_oos_pseudo[c("mean", "last", "last_month")],
   caption = "Pseudo out-of-sample absolute MAE by lag and aggregation method"
 )
-write_table_output("table_output_abs_mae_oos_pseudo3.tex", results_abs_mae_oos_pseudo$table_tex)
+write_table_output("table_output_abs_mae_oos_pseudo3.tex", results_abs_mae_oos_pseudo$table_tex, tables_dir)
 results_abs_mae_oos_RT <- create_combined_latex_table(
   scaled_abs_mae_oos_RT[c("mean", "last", "last_month")],
   caption = "Real-time out-of-sample absolute MAE by lag and aggregation method"
 )
-write_table_output("table_output_abs_mae_oos_RT3.tex", results_abs_mae_oos_RT$table_tex)
+write_table_output("table_output_abs_mae_oos_RT3.tex", results_abs_mae_oos_RT$table_tex, tables_dir)
 
 results_rmse_oos_pseudo_crisis <- build_oos_crisis_tables(
   total_tables = error_tables_pseudo,

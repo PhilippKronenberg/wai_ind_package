@@ -1,7 +1,7 @@
 
 # PRELIM ------------------------------------------------------------------
 
-rm(list = ls())
+# Run from the repository root.
 
 library(Matrix)
 library(zoo)
@@ -10,9 +10,7 @@ library(tidyr)
 library(foreach)
 library(readxl)
 
-source("code/lib/functions_model.R")
-source("code/lib/functions_backcast.R")
-source("code/5_plots/analytics_functions.R")
+library(waiind)
 
 
 
@@ -20,9 +18,9 @@ source("code/5_plots/analytics_functions.R")
 # IMPORT DATA -------------------------------------------------------------
 
 # for Switzerland
-#load("code/Rda/data_ch.Rda")
-#load("code/Rda/data_ch_dataset.Rda")
-load("code/Rda/data_ch_dataset_test.Rda")
+#load("analysis/Rda/data_ch.Rda")
+#load("analysis/Rda/data_ch_dataset.Rda")
+load("analysis/Rda/data_ch_dataset_test.Rda")
 
 sample_end_indicator_date <- 2026
 dat <- cut_data(dat, current_date = sample_end_indicator_date)
@@ -88,7 +86,7 @@ out <- hfdfm(flows = dat$flows,
              target = target)
 
 
-save(out, file = "archive/final_20_04_2026.Rda")
+save(out, file = "analysis/archive/final_20_04_2026.Rda")
 
 
 # CHECK FORECAST DISTRIBUTION ---------------------------------------------

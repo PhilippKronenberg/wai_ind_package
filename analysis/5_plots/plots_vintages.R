@@ -1,6 +1,5 @@
 
-rm(list = ls())
-cat("\014")
+# Run from the repository root.
 
 library(zoo)
 library(tibble)
@@ -14,8 +13,9 @@ library(pammtools)
 library(ggsci)
 library(RColorBrewer)
  
-source("code/lib/functions_model.R")
-source("code/lib/functions_backcast.R")
+library(waiind)
+
+fit_root <- "fits/updated"  # root of the model fits (git-ignored)
 
 
 # SETTINGS -------------------------------------------------------------
@@ -58,9 +58,9 @@ dataset_used <- "full_RT"
 # gather stored output
 out <- lapply(datasets, function(xd){
   out_tx <- lapply(date_vec, function(xt){
-    #load(paste0("L:/Groups/Economic Forecasting/Internationale Konjunktur/Sonstiges/WAI/fits_20210126/fits/wai/",xd,"/fit_",round(xt,3),".Rda"))
-    #load(paste0("L:/Groups/Economic Forecasting/Internationale Konjunktur/Sonstiges/WAI/fits/wai/",xd,"/fit_",round(xt,3),".Rda"))
-    load(paste0(wd,"/fits/updated/",dataset_used,"/fit_",round(xt,3),".Rda"))
+    
+    
+    load(file.path(fit_root, dataset_used, paste0("fit_", round(xt,3), ".Rda")))
 
     ryear <- floor(time(mod$factor))
     rmon <- as.numeric(format(as.yearmon(time(mod$factor)), "%m"))
@@ -103,15 +103,15 @@ tab$periods <- plyr::round_any(x = as.numeric(format(tab$time, "%Y")) +
                                f = floor)
 
 # save list for further processing
-save(tab, date_vec, file = "code/Rda/factor_vintages_updated.Rda")
-#save(tab, date_vec, file = "code/Rda/factor_vintages.Rda")
-#save(tab, date_vec, file = "code/Rda/factor_vintages_fits_20210126.Rda")
+save(tab, date_vec, file = "analysis/Rda/factor_vintages_updated.Rda")
+#save(tab, date_vec, file = "analysis/Rda/factor_vintages.Rda")
+#save(tab, date_vec, file = "analysis/Rda/factor_vintages_fits_20210126.Rda")
 
 # TRANSFORM RESULTS FROM BACKCAST TO TABLE ---------------------------------------------------------------
 
-#load("code/Rda/factor_vintages_fits_20210126.Rda")
-#load("code/Rda/factor_vintages.Rda")
-load("code/Rda/factor_vintages_updated.Rda")
+#load("analysis/Rda/factor_vintages_fits_20210126.Rda")
+#load("analysis/Rda/factor_vintages.Rda")
+load("analysis/Rda/factor_vintages_updated.Rda")
 tab2 <- tab[which(tab$method == "full_RT"),] # Choose Method
 
 

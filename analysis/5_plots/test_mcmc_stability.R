@@ -1,5 +1,4 @@
-rm(list = ls())
-cat("\014")
+# Run from the repository root.
 
 # PACKAGES AND FUNCTIONS --------------------------------------------------
 
@@ -12,8 +11,7 @@ library(ggplot2)
 library(zoo)
 library(readxl)
 
-source("code/lib/functions_model.R")
-source("code/lib/functions_backcast.R")
+library(waiind)
 
 
 # SETTINGS ----------------------------------------------------------------
@@ -290,7 +288,7 @@ plot_frontier <- function(summary_tab, recommendation_tab, file_name) {
 
 # DATA --------------------------------------------------------------------
 
-load("code/Rda/data_ch_dataset.Rda")
+load("analysis/Rda/data_ch_dataset.Rda")
 
 GDP_gr_vintages <- get_real_time_gdp_vintages("quarterly") %>%
   mutate(across(-time, ~ (1 + .x)^4 - 1))

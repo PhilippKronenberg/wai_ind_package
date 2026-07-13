@@ -13,17 +13,13 @@
 # scripts when those objects are not yet available.
 # -----------------------------------------------------------------------------
 
-source("code/5_plots/analytics_functions.R")
-load_analytics_packages()
-initialize_plots_insample_context()
+source("analysis/5_plots/_setup.R")
 
 
 # -----------------------------------------------------------------------------
 # Shared Dependencies
 # -----------------------------------------------------------------------------
-# Load helper functions that are used for backcasting and time conversions.
-
-source("code/lib/functions_backcast.R")
+# Backcasting and time-conversion helpers come from the waiind package.
 
 
 # -----------------------------------------------------------------------------
@@ -32,7 +28,7 @@ source("code/lib/functions_backcast.R")
 # Import the external benchmark series and construct weekly or monthly working
 # tables for the comparison indicators.
 
-raw_data <- read_excel("data/benchmarks/wwa.xlsx", sheet = "data", skip = 4, col_names = TRUE)
+raw_data <- read_excel("analysis/benchmarks/archive_data_benchmarks/wwa.xlsx", sheet = "data", skip = 4, col_names = TRUE)
 data_wwa <- raw_data %>%
   rename(Year = 1, Week = 2, "SECO-WWA" = 3, wwa_2019diff = 4) %>%
   mutate(
@@ -73,7 +69,7 @@ wwa_gr_df_qoq <- wwa_gr_df_qoq %>%
 wwa_gr_df_qoq <- wwa_gr_df_qoq %>% pivot_longer(-c(time))
 
 # Import and clean the SNB business cycle index into a monthly zoo series.
-raw_snb <- read_excel("data/benchmarks/snb-chart-data-snbbcich-de-all-20260325_1500.xlsx", skip = 15, col_names = TRUE)
+raw_snb <- read_excel("analysis/benchmarks/archive_data_benchmarks/snb-chart-data-snbbcich-de-all-20250326_1500.xlsx", skip = 15, col_names = TRUE)
 names(raw_snb)[1] <- "Date"
 raw_snb <- raw_snb %>%
   mutate(Date = as.Date(paste0(Date, "-01"))) %>%
@@ -84,7 +80,7 @@ data_snb <- raw_snb %>%
 snb_zoo <- zoo(data_snb$`SNB-BCI`, order.by = as.Date(data_snb$Date, format = "%Y-%m-%d"))
 
 # Import and clean the SECO-SEC labor-market indicator into a monthly zoo series.
-raw_seco_kss <- read_excel("data/benchmarks/kss.xlsx", sheet = "data", skip = 4, col_names = TRUE)
+raw_seco_kss <- read_excel("analysis/benchmarks/archive_data_benchmarks/kss.xlsx", sheet = "data", skip = 4, col_names = TRUE)
 data_kss <- raw_seco_kss %>%
   rename(Year = 1, Month = 2, "SECO-SEC" = 3, lower = 4, upper = 5) %>%
   mutate(
@@ -95,14 +91,14 @@ data_kss <- raw_seco_kss %>%
 kss_zoo <- zoo(data_kss$`SECO-SEC`, order.by = as.Date(data_kss$Date, format = "%Y-%m-%d"))
 
 # Import and clean the KOF Barometer into a monthly zoo series.
-raw_kof_baro <- read_excel("data/benchmarks/kof_barometer.xlsx", col_names = TRUE)
+raw_kof_baro <- read_excel("analysis/benchmarks/archive_data_benchmarks/kof_barometer.xlsx", col_names = TRUE)
 data_barro <- raw_kof_baro %>%
   rename(Date = date, "KOF-BARO" = kofbarometer) %>%
   mutate(Date = as.Date(paste0(Date, "-01")))
 baro_zoo <- zoo(data_barro$`KOF-BARO`, order.by = as.Date(data_barro$Date, format = "%Y-%m-%d"))
 
 # Import the F-Curve and convert it into the same weekly-style value/time layout.
-fcurve <- read.csv("data/benchmarks/f-curve-data.csv")
+fcurve <- read.csv("analysis/benchmarks/archive_data_benchmarks/f-curve-data.csv")
 fcurve_norm = na.approx(fcurve$f.curve)#sd(x_hist_gr_short)
 fcurve_gr <- zoo(x = cbind(-fcurve_norm),
                  order.by = as.Date(fcurve$X, format = "%Y-%m-%d"))
@@ -120,8 +116,8 @@ fcurve_gr_df <- fcurve_gr_df %>% pivot_longer(-c(time))
 # -----------------------------------------------------------------------------
 # Build the quarterly and yearly historical GDP growth series that are used for
 # plotting, rescaling, and correlation analysis.
-#load("code/Rda/data_ch.Rda")
-load("code/Rda/data_ch_dataset_test.Rda")
+#load("analysis/Rda/data_ch.Rda")
+load("analysis/Rda/data_ch_dataset_test.Rda")
 
 # Build the quarter-on-quarter GDP growth series from the latest real-time
 # GDP vintage available up to the configured sample-end vintage date, then
@@ -204,7 +200,7 @@ x_hist_gr_yoy_lag1_df <- x_hist_gr_yoy_lag1_df %>% pivot_longer(-c(time))
 # -----------------------------------------------------------------------------
 # Load the fixed baseline WAI fit used for the core data objects in this script.
 #load("fits/full/testlauf5_20_04_2026.Rda")
-load("fits/updated/full_RT/fit_2025.979.Rda")
+load(file.path(sample_config$fit_rt_dir, "fit_2025.979.Rda"))
 #load(file.path(sample_config$fit_root, "full", "fit_2021.979.Rda"))
 out <- mod
 start_date <- 1990
@@ -374,6 +370,6 @@ analytics_data_outputs <- list(
   tab_gr_vol = tab_gr_vol,
   out = out
 )
-save_result_output(analytics_data_outputs, "analytics_data_outputs.rda")
+save_result_output(analytics_data_outputs, "analytics_data_outputs.rda", results_dir)
 
 plots_insample_data_ready <- TRUE
