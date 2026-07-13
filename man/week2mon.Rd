@@ -17,3 +17,8 @@ A list with components \code{flows} and \code{stocks}.
 Aggregates every weekly series (frequency 48) in the dataset to
 monthly sums; series of other frequencies are returned unchanged.
 }
+\examples{
+data(data_ch_dataset_test)
+monthly <- week2mon(data_ch_dataset_test)
+stats::frequency(monthly$flows[[1]])
+}

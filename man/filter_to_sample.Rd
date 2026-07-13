@@ -27,3 +27,8 @@ The filtered data frame.
 \description{
 Filter a data frame to the evaluation sample window
 }
+\examples{
+df <- data.frame(time = seq(as.Date("2019-01-01"), by = "quarter", length.out = 12),
+                 value = rnorm(12))
+filter_to_sample(df, end_date = as.Date("2020-12-31"))
+}

@@ -40,3 +40,13 @@ A \code{ggplot} object.
 \description{
 Plot the WAI against a comparison indicator and GDP
 }
+\examples{
+wk <- seq(as.Date("2005-01-07"), by = "week", length.out = 900)
+wai <- data.frame(time = wk, value = rnorm(900))
+cmp <- data.frame(time = wk, value = rnorm(900))
+crises <- data.frame(Peak = as.Date("2008-07-07"), Trough = as.Date("2009-09-28"))
+gdp <- data.frame(value = seq(as.Date("2005-01-01"), by = "quarter", length.out = 60),
+                  y = rnorm(60))
+plot_comparison(wai, cmp, "Benchmark", crises, gdp,
+                sample_end_date = as.Date("2021-12-31"))
+}

@@ -14,6 +14,12 @@
 #'
 #' @importFrom dplyr filter pull mutate %>%
 #' @importFrom stats sd
+#' @examples
+#' ind <- data.frame(time = seq(as.Date("2010-01-07"), by = "week", length.out = 200),
+#'                   value = rnorm(200, 5, 2))
+#' gdp <- data.frame(value = seq(as.Date("2010-01-01"), by = "quarter", length.out = 40),
+#'                   y = rnorm(40, 1, 1))
+#' head(rescale_to_gdp(ind, gdp))
 #' @export
 rescale_to_gdp <- function(indicator_df, gdp_hist_df,
                            ref_start = as.Date("2005-01-01"),
@@ -56,6 +62,10 @@ rescale_to_gdp <- function(indicator_df, gdp_hist_df,
 #'
 #' @importFrom dplyr select mutate group_by summarise arrange lag transmute filter %>%
 #' @importFrom lubridate floor_date
+#' @examples
+#' lv <- data.frame(time = seq(as.Date("2020-01-07"), by = "week", length.out = 150),
+#'                  value = 100 * cumprod(1 + rnorm(150, 0, 0.002)))
+#' head(build_wai_qoq_mean_series(lv))
 #' @export
 build_wai_qoq_mean_series <- function(level_df) {
   level_df %>%
@@ -78,6 +88,12 @@ build_wai_qoq_mean_series <- function(level_df) {
 #'   level index, anything else returns the stored QoQ table.
 #'
 #' @return Data frame with `time` and `value`.
+#' @examples
+#' res <- list(tab_gr_qoq = data.frame(time = as.Date("2020-01-07"), value = 1),
+#'             tab_gr_lv = data.frame(time = seq(as.Date("2020-01-07"), by = "week",
+#'                                               length.out = 150),
+#'                                    value = cumprod(1 + rnorm(150, 0, 0.002))))
+#' prepare_wai_qoq_series(res, method = "last")
 #' @export
 prepare_wai_qoq_series <- function(wai_result, method) {
   if (method == "mean") {
@@ -107,6 +123,15 @@ prepare_wai_qoq_series <- function(wai_result, method) {
 #'   scale_color_manual theme_minimal theme element_text element_blank labs
 #'   coord_cartesian
 #' @importFrom stats setNames
+#' @examples
+#' wk <- seq(as.Date("2005-01-07"), by = "week", length.out = 900)
+#' wai <- data.frame(time = wk, value = rnorm(900))
+#' cmp <- data.frame(time = wk, value = rnorm(900))
+#' crises <- data.frame(Peak = as.Date("2008-07-07"), Trough = as.Date("2009-09-28"))
+#' gdp <- data.frame(value = seq(as.Date("2005-01-01"), by = "quarter", length.out = 60),
+#'                   y = rnorm(60))
+#' plot_comparison(wai, cmp, "Benchmark", crises, gdp,
+#'                 sample_end_date = as.Date("2021-12-31"))
 #' @export
 plot_comparison <- function(tab_wai, comparison_df, comparison_label,
                             crises, hist_tab_gdp, sample_end_date,
@@ -187,6 +212,11 @@ plot_comparison <- function(tab_wai, comparison_df, comparison_label,
 #' @importFrom tibble tibble
 #' @importFrom lubridate floor_date
 #' @importFrom stats cor
+#' @examples
+#' \dontrun{
+#' # inputs is the bundle of data objects built by analysis/5_plots scripts:
+#' cor_tab <- get_combined_cor_table("mean", "indicators", inputs = insample_inputs)
+#' }
 #' @export
 get_combined_cor_table <- function(method = c("mean", "last", "last_month"),
                                    analysis_set = c("wai_versions", "indicators"),
@@ -433,6 +463,15 @@ get_combined_cor_table <- function(method = c("mean", "last", "last_month"),
 #'   theme_minimal theme element_text element_blank labs ggsave
 #' @importFrom ggpubr ggarrange
 #' @importFrom scales squish
+#' @examples
+#' \dontrun{
+#' render_correlation_heatmap(
+#'   cor_tables = list(mean = cor_tab_mean, last = cor_tab_last),
+#'   series_order = c("WAI", "SECO-WWA", "KOF-BARO"),
+#'   output_file = "correlation_heatmap.pdf",
+#'   figures_dir = cfg$figures_dir
+#' )
+#' }
 #' @export
 render_correlation_heatmap <- function(cor_tables, series_order, output_file, figures_dir) {
   method_labels <- c(

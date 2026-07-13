@@ -34,3 +34,9 @@ Computes lagged correlations of the WAI (and either the benchmark
 indicators or the WAI model variants) with GDP growth, for YoY and QoQ
 frequencies, at lags -4 to 0.
 }
+\examples{
+\dontrun{
+# inputs is the bundle of data objects built by analysis/5_plots scripts:
+cor_tab <- get_combined_cor_table("mean", "indicators", inputs = insample_inputs)
+}
+}

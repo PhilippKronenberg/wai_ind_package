@@ -20,3 +20,9 @@ Invisibly, the full path written.
 \description{
 Save a result object to the results directory
 }
+\examples{
+dir <- tempfile(); dir.create(dir)
+results_example <- data.frame(x = 1:3)
+save_result_output(results_example, "results_example.rda", results_dir = dir)
+load(file.path(dir, "results_example.rda"))
+}

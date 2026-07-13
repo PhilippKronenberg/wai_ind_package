@@ -17,3 +17,8 @@ A list with components \code{flows} and \code{stocks}.
 Removes the financial market indicators (FINANSW, INDUSSW, SWISSMI,
 VIX) from both the flows and stocks components.
 }
+\examples{
+data(data_ch_dataset_test)
+no_fin <- drop_financial(data_ch_dataset_test)
+setdiff(names(data_ch_dataset_test$flows), names(no_fin$flows))
+}

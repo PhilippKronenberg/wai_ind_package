@@ -7,6 +7,10 @@
 #'   `ts` objects).
 #'
 #' @return A list with components `flows` and `stocks`.
+#' @examples
+#' data(data_ch_dataset_test)
+#' monthly <- week2mon(data_ch_dataset_test)
+#' stats::frequency(monthly$flows[[1]])
 #' @export
 week2mon <- function(dat){
 
@@ -34,6 +38,10 @@ week2mon_helper <- function(x){
 #' @inheritParams week2mon
 #'
 #' @return A list with components `flows` and `stocks`.
+#' @examples
+#' data(data_ch_dataset_test)
+#' no_weekly <- drop_weekly(data_ch_dataset_test)
+#' length(no_weekly$flows)
 #' @export
 drop_weekly <- function(dat){
 
@@ -66,6 +74,10 @@ remove_elements <- function(lst, names_to_remove) {
 #' @inheritParams week2mon
 #'
 #' @return A list with components `flows` and `stocks`.
+#' @examples
+#' data(data_ch_dataset_test)
+#' no_fin <- drop_financial(data_ch_dataset_test)
+#' setdiff(names(data_ch_dataset_test$flows), names(no_fin$flows))
 #' @export
 drop_financial <- function(dat){
   # Names you want to remove
@@ -85,6 +97,10 @@ drop_financial <- function(dat){
 #' @inheritParams week2mon
 #'
 #' @return A list with components `flows` and `stocks`.
+#' @examples
+#' data(data_ch_dataset_test)
+#' total_retail_only <- drop_retail(data_ch_dataset_test)
+#' length(total_retail_only$flows)
 #' @export
 drop_retail <- function(dat){
   # Names you want to remove

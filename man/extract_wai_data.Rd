@@ -20,3 +20,9 @@ and derives long-format tables of the weekly growth rate (with 95\%
 bands), the cumulated level index (rebased to 2020 = 100), and
 year-over-year growth, as used by the plotting scripts.
 }
+\examples{
+\dontrun{
+result_wai <- extract_wai_data("fits/updated/full_RT/fit_2025.979.Rda")
+head(result_wai$tab_gr_qoq)
+}
+}

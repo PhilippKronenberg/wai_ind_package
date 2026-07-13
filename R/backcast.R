@@ -21,6 +21,14 @@
 #' @return Invisibly, a list with elements `nowcast` and `nowcast_var`.
 #'
 #' @importFrom stats arima predict
+#' @examples
+#' \donttest{
+#' data(data_ch_dataset_test)
+#' fit <- run_ar(flows = data_ch_dataset_test$flows, stocks = NULL,
+#'               target = "ch.seco.gdp.real.gdp.ssa",
+#'               date = 2024.5, dataset_used = "example")
+#' fit$nowcast
+#' }
 #' @export
 run_ar <- function(flows, stocks, target, date, dataset_used, stochastic_volatility = TRUE,
                    output_dir = NULL){
@@ -65,6 +73,14 @@ run_ar <- function(flows, stocks, target, date, dataset_used, stochastic_volatil
 #' @return Invisibly, the windowed `hfdfm` fit object.
 #'
 #' @importFrom stats window time frequency
+#' @examples
+#' \dontrun{
+#' # Full MCMC estimation at one evaluation date, saving the fit:
+#' fit <- run_wai_adj(flows = dat$flows, stocks = dat$stocks,
+#'                    target = "ch.seco.gdp.real.gdp.ssa",
+#'                    date = 2024.5, dataset_used = "full_RT",
+#'                    output_dir = "fits/updated")
+#' }
 #' @export
 run_wai_adj <- function(flows, stocks, target, date, dataset_used, stochastic_volatility = TRUE,
                         output_dir = NULL){
@@ -103,6 +119,9 @@ run_wai_adj <- function(flows, stocks, target, date, dataset_used, stochastic_vo
 #' @param model Character, `"ar"` or `"wai"`.
 #'
 #' @return The nowcast value.
+#' @examples
+#' fit <- list(nowcast = stats::ts(c(0.3, 0.5), start = 2024, frequency = 4))
+#' retrieve_nowcast(fit, model = "wai")
 #' @export
 retrieve_nowcast <- function(fit, model){
   if(model == "ar") ncst <- fit$nowcast
@@ -117,6 +136,9 @@ retrieve_nowcast <- function(fit, model){
 #' @inheritParams retrieve_nowcast
 #'
 #' @return The nowcast variance.
+#' @examples
+#' fit <- list(nowcast_var = stats::ts(c(0.02, 0.04), start = 2024, frequency = 4))
+#' retrieve_nowcast_var(fit, model = "wai")
 #' @export
 retrieve_nowcast_var <- function(fit, model){
   if(model == "ar") ncst <- fit$nowcast_var
@@ -144,6 +166,11 @@ retrieve_nowcast_var <- function(fit, model){
 #' @importFrom tidyr pivot_longer
 #' @importFrom dplyr select %>%
 #' @importFrom stats ts time window frequency
+#' @examples
+#' \dontrun{
+#' result_wai <- extract_wai_data("fits/updated/full_RT/fit_2025.979.Rda")
+#' head(result_wai$tab_gr_qoq)
+#' }
 #' @export
 extract_wai_data <- function(file_path) {
   # Load model object

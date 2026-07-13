@@ -23,3 +23,13 @@ Invisibly, the assembled plot.
 \description{
 Render the lag-correlation heatmap grid and save it
 }
+\examples{
+\dontrun{
+render_correlation_heatmap(
+  cor_tables = list(mean = cor_tab_mean, last = cor_tab_last),
+  series_order = c("WAI", "SECO-WWA", "KOF-BARO"),
+  output_file = "correlation_heatmap.pdf",
+  figures_dir = cfg$figures_dir
+)
+}
+}

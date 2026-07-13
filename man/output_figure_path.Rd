@@ -18,3 +18,6 @@ The full file path.
 \description{
 Build the full path for a figure output file
 }
+\examples{
+output_figure_path("history.pdf", figures_dir = "outputs/figures")
+}

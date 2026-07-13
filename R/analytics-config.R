@@ -75,6 +75,12 @@ wai_sample_config <- function(sample_id = "sample_2025Q4",
 #'   cutoff are considered.
 #'
 #' @return Full path of the selected fit file.
+#' @examples
+#' dir <- tempfile(); dir.create(dir)
+#' mod <- list()
+#' save(mod, file = file.path(dir, "fit_2020.5.Rda"))
+#' save(mod, file = file.path(dir, "fit_2021.25.Rda"))
+#' latest_fit_file(dir, cutoff_decimal = 2020.9)
 #' @export
 latest_fit_file <- function(folder, cutoff_decimal) {
   files <- list.files(folder, pattern = "^fit_[0-9.]+\\.Rda$", full.names = TRUE)
@@ -98,6 +104,10 @@ latest_fit_file <- function(folder, cutoff_decimal) {
 #'   `wai_sample_config()$tables_dir`).
 #'
 #' @return Invisibly, the full path written.
+#' @examples
+#' dir <- tempfile(); dir.create(dir)
+#' write_table_output("example.tex", "\\textbf{table}", tables_dir = dir)
+#' readLines(file.path(dir, "example.tex"))
 #' @export
 write_table_output <- function(filename, contents, tables_dir) {
   path <- file.path(tables_dir, filename)
@@ -114,6 +124,11 @@ write_table_output <- function(filename, contents, tables_dir) {
 #'   `wai_sample_config()$results_dir`).
 #'
 #' @return Invisibly, the full path written.
+#' @examples
+#' dir <- tempfile(); dir.create(dir)
+#' results_example <- data.frame(x = 1:3)
+#' save_result_output(results_example, "results_example.rda", results_dir = dir)
+#' load(file.path(dir, "results_example.rda"))
 #' @export
 save_result_output <- function(object, filename, results_dir) {
   path <- file.path(results_dir, filename)
@@ -129,6 +144,8 @@ save_result_output <- function(object, filename, results_dir) {
 #'   `wai_sample_config()$figures_dir`).
 #'
 #' @return The full file path.
+#' @examples
+#' output_figure_path("history.pdf", figures_dir = "outputs/figures")
 #' @export
 output_figure_path <- function(filename, figures_dir) {
   file.path(figures_dir, filename)
@@ -144,6 +161,10 @@ output_figure_path <- function(filename, figures_dir) {
 #'   `wai_sample_config()$sample_end_date`.
 #'
 #' @return The filtered data frame.
+#' @examples
+#' df <- data.frame(time = seq(as.Date("2019-01-01"), by = "quarter", length.out = 12),
+#'                  value = rnorm(12))
+#' filter_to_sample(df, end_date = as.Date("2020-12-31"))
 #' @export
 filter_to_sample <- function(df, time_col = "time", start_date = as.Date("1990-01-01"), end_date) {
   df[df[[time_col]] >= start_date & df[[time_col]] <= end_date, , drop = FALSE]
@@ -159,6 +180,10 @@ filter_to_sample <- function(df, time_col = "time", start_date = as.Date("1990-0
 #'   `wai_sample_config()$sample_end_decimal`.
 #'
 #' @return The newest vintage as a numeric decimal date.
+#' @examples
+#' vintages <- data.frame(time = 1:3, "2020.25" = rnorm(3), "2020.75" = rnorm(3),
+#'                        check.names = FALSE)
+#' get_latest_numeric_vintage(vintages, upper_bound = 2020.5)
 #' @export
 get_latest_numeric_vintage <- function(df, lower_bound = -Inf, upper_bound) {
   vintages <- suppressWarnings(as.numeric(names(df)[-1]))
@@ -180,6 +205,13 @@ get_latest_numeric_vintage <- function(df, lower_bound = -Inf, upper_bound) {
 #' @param lower_bound Numeric lower bound on vintages considered.
 #'
 #' @return The extending vintage as a numeric decimal date.
+#' @examples
+#' vintages <- data.frame(
+#'   time = seq(as.Date("2019-01-01"), by = "quarter", length.out = 4),
+#'   "2019.5" = c(1, 2, NA, NA), "2020.25" = c(1, 2, 3, NA),
+#'   check.names = FALSE
+#' )
+#' get_next_extending_numeric_vintage(vintages, as.Date("2019-09-30"))
 #' @export
 get_next_extending_numeric_vintage <- function(df, reference_date, lower_bound = -Inf) {
   reference_decimal <- round(decimal_date_local(reference_date), 3)

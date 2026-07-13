@@ -64,6 +64,11 @@ dm_test_modified <- function(e1, e2, h = 1, power = 2, alternative = "greater") 
 #' @importFrom Metrics rmse mae
 #' @importFrom stats lm predict
 #' @importFrom rlang .data
+#' @examples
+#' \dontrun{
+#' fit_tabs <- get_insample_fit_table("mean", "indicators", inputs = insample_inputs)
+#' fit_tabs$RMSE
+#' }
 #' @export
 get_insample_fit_table <- function(method = c("mean", "last", "last_month"),
                                    analysis_set = c("wai_versions", "indicators"),
@@ -341,6 +346,12 @@ get_insample_fit_table <- function(method = c("mean", "last", "last_month"),
 #' @importFrom dplyr ungroup filter select mutate left_join across where
 #'   starts_with %>%
 #' @importFrom tidyr pivot_longer pivot_wider
+#' @examples
+#' \dontrun{
+#' fit_tabs <- get_insample_fit_table("mean", "indicators", inputs = insample_inputs)
+#' rel <- calculate_relative_errors(fit_tabs)
+#' rel$RMSE_relative
+#' }
 #' @export
 calculate_relative_errors <- function(fit_tables) {
   rmse_table <- fit_tables$RMSE %>% ungroup()
@@ -399,6 +410,10 @@ calculate_relative_errors <- function(fit_tables) {
 #'
 #' @importFrom dplyr mutate left_join select case_when starts_with %>%
 #' @importFrom tidyr pivot_longer pivot_wider
+#' @examples
+#' \dontrun{
+#' annotated <- annotate_relative_errors(rel$RMSE_relative, fit_tabs$PVAL_RMSE, "RMSE")
+#' }
 #' @export
 annotate_relative_errors <- function(rel_table, pval_table, metric_prefix) {
   # Remove prefix to get lag names
@@ -456,6 +471,11 @@ annotate_relative_errors <- function(rel_table, pval_table, metric_prefix) {
 #'   across everything all_of any_of starts_with %>%
 #' @importFrom knitr kable
 #' @importFrom kableExtra add_header_above kable_styling row_spec column_spec
+#' @examples
+#' \dontrun{
+#' out <- create_combined_latex_table(list(mean = cor_tab_mean, last = cor_tab_last))
+#' cat(out$table_tex)
+#' }
 #' @export
 create_combined_latex_table <- function(combined_tables_list,
                                         caption = "Cross Correlation with GDP for Different Lags and Aggregation Methods",
@@ -615,6 +635,10 @@ create_combined_latex_table <- function(combined_tables_list,
 #' @importFrom dplyr filter group_by summarise mutate %>%
 #' @importFrom zoo as.yearqtr
 #' @importFrom rlang .data
+#' @examples
+#' df <- data.frame(Series = "WAI",
+#'                  date = seq(as.Date("2010-01-01"), by = "quarter", length.out = 8))
+#' print_evaluation_periods(df, "Series", "date", context_label = "example")
 #' @export
 print_evaluation_periods <- function(data, series_col, date_col, context_label, frequency_label = NULL, method_label = NULL) {
   if (is.null(data) || nrow(data) == 0) {
@@ -668,6 +692,12 @@ print_evaluation_periods <- function(data, series_col, date_col, context_label, 
 #' @importFrom tidyr pivot_wider
 #' @importFrom purrr map
 #' @importFrom rlang .data
+#' @examples
+#' \dontrun{
+#' details <- get_insample_error_details("mean", "indicators", inputs = insample_inputs)
+#' tabs <- create_error_summary_tables(details, model_order = c("WAI", "KOF-BARO"),
+#'                                     date_col = "observation_date")
+#' }
 #' @export
 create_error_summary_tables <- function(error_data, model_order, date_col, lag_range = -4:0, include_period = FALSE) {
 
@@ -830,6 +860,11 @@ create_error_summary_tables <- function(error_data, model_order, date_col, lag_r
 #' @importFrom lubridate floor_date
 #' @importFrom stats lm predict
 #' @importFrom rlang .data
+#' @examples
+#' \dontrun{
+#' details <- get_insample_error_details("mean", "indicators", inputs = insample_inputs)
+#' head(details)
+#' }
 #' @export
 get_insample_error_details <- function(method = c("mean", "last", "last_month"),
                                        analysis_set = c("wai_versions", "indicators"),
@@ -1004,6 +1039,12 @@ get_insample_error_details <- function(method = c("mean", "last", "last_month"),
 #'   pull everything %>%
 #' @importFrom tidyr pivot_wider
 #' @importFrom purrr map
+#' @examples
+#' \dontrun{
+#' # combined_results is the long out-of-sample error table built by
+#' # analysis/5_plots/analytics_out-of-sample.R:
+#' rel <- create_rel_error_tables(combined_results, model_order = c("WAI", "AR"))
+#' }
 #' @export
 create_rel_error_tables <- function(combined_results, model_order, lag_range = -4:0) {
 

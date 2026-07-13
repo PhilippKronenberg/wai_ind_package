@@ -20,3 +20,8 @@ Invisibly, the full path written.
 \description{
 Write a table output file
 }
+\examples{
+dir <- tempfile(); dir.create(dir)
+write_table_output("example.tex", "\\\\textbf{table}", tables_dir = dir)
+readLines(file.path(dir, "example.tex"))
+}

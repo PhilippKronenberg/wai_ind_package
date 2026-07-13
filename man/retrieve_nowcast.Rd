@@ -17,3 +17,7 @@ The nowcast value.
 \description{
 Extract the nowcast from a fit object
 }
+\examples{
+fit <- list(nowcast = stats::ts(c(0.3, 0.5), start = 2024, frequency = 4))
+retrieve_nowcast(fit, model = "wai")
+}
