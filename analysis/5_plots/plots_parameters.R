@@ -1,11 +1,13 @@
 
-rm(list = ls())
-cat("\014")
+# Run from the repository root.
 
 # PACKAGES AND FUNCTIONS --------------------------------------------------
 
 library(dplyr)
 library(ggplot2)
+library(waiind)
+
+fit_root <- "fits"  # root of the model fits (git-ignored)
 
 # PRELIM ------------------------------------------------------------------
 
@@ -19,7 +21,7 @@ date_vec <- seq(start_date, end_date, 1/48)
 # GATHER STORED FILES TO LIST
 out_tx <- lapply(date_vec, function(xt){
   
-  load(paste0("L:/Groups/Economic Forecasting/Internationale Konjunktur/Sonstiges/WAI/fits/wai/full/fit_",round(xt,3),".Rda"))
+  load(file.path(fit_root, "wai", "full", paste0("fit_", round(xt,3), ".Rda")))
   
   data.frame("values" = c(as.numeric(mod$pars$lambda), 
                           as.numeric(mod$pars$phi), 

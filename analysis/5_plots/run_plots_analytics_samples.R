@@ -19,5 +19,5 @@ sample_configs <- list(
 for (cfg in sample_configs) {
   message(sprintf("Running plots_analytics.R for %s", cfg$sample_id))
   sample_config <- cfg
-  #sys.source("code/5_plots/plots_analytics.R", envir = new.env(parent = globalenv()))
+  #sys.source("analysis/5_plots/plots_analytics.R", envir = new.env(parent = globalenv()))
 }

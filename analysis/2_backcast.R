@@ -1,6 +1,5 @@
 
-rm(list = ls())
-cat("\014")
+# Run from the repository root.
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #
@@ -41,16 +40,15 @@ library(foreach)
 library(doParallel)
 library(readxl)
 
-source("code/lib/functions_model.R")
-#source("code/lib/functions_backcast_euler.R")
-source("code/lib/functions_backcast.R")
-source("code/5_plots/analytics_functions.R")
+library(waiind)
+
+fit_root <- "fits/updated"  # where model fits are written (git-ignored)
 
 
 
 # IMPORT DATA -------------------------------------------------------------
 
-load("code/Rda/data_ch_dataset_test.Rda")
+load("analysis/Rda/data_ch_dataset_test.Rda")
 
 sample_end_indicator_date <- 2026
 dat <- cut_data(dat, current_date = sample_end_indicator_date)
@@ -75,7 +73,7 @@ dat$flows[[target]] <- x_hist_gr
 
 
 # # for Switzerland
-# load("code/Rda/data_ch_dataset.Rda")
+# load("analysis/Rda/data_ch_dataset.Rda")
 # 
 # sample_end_gdp_vintage_date <- as.Date("2025-12-31")
 # GDP_gr_vintages_quarterly <- get_real_time_gdp_vintages("quarterly")
@@ -137,31 +135,29 @@ date_vec <- seq(start_date, end_date, 1/48)
 # foreach(ix = date_vec,
 #                    xdat = datasets,
 foreach(ix = date_vec,
-        .packages = c("Matrix", "zoo","dplyr",
+        .packages = c("waiind", "Matrix", "zoo","dplyr",
                       "tidyr", "forecast")) %do% { # %dopar% {
-          
-          # source all functions to nodes
-          source("code/lib/functions_model.R")
-          source("code/lib/functions_backcast.R")
-          
+
           for(dataset_name in names(datasets)){
             dataset_cfg <- datasets[[dataset_name]]
             xdat <- dataset_cfg$data
             stochastic_volatility <- dataset_cfg$stochastic_volatility
-            
-            for(run_mod in models){
-              
+
+            for(model_name in names(models)){
+              run_mod <- models[[model_name]]
+
               # prepare data
               dat_realtime <- cut_data(xdat, ix)
-              
-              # run model
+
+              # run model; the AR benchmark keeps its own subfolder as before
               out <- run_mod(flows = dat_realtime$flows,
                              stocks = dat_realtime$stocks,
                              target = "ch.seco.gdp.real.gdp.ssa",
                              date = ix,
                              dataset_used = dataset_name,
-                             stochastic_volatility = stochastic_volatility)
-              
+                             stochastic_volatility = stochastic_volatility,
+                             output_dir = if (model_name == "ar") file.path(fit_root, "ar") else fit_root)
+
             }
           }
         }

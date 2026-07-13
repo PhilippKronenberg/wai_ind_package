@@ -1,9 +1,9 @@
-project_dir <- "C:/Users/kphilipp/GitHub/wai_ind/"
-setwd(project_dir)
+# Run from the repository root.
+library(waiind)
 
-load("code/Rda/data_ch_dataset.Rda")
+load("analysis/Rda/data_ch_dataset.Rda")
 dat_new <- dat
-load("code/Rda/data_ch.Rda")
+load("analysis/Rda/data_ch.Rda")
 dat_old <- dat
 
 flatten_dat <- function(x) {
@@ -111,7 +111,7 @@ comparison <- lapply(common, function(nm) {
 comparison_df <- do.call(rbind, comparison)
 comparison_df <- comparison_df[order(comparison_df$status, comparison_df$series), ]
 
-utils::write.csv(comparison_df, "code/out/data_ch_dataset_vs_legacy.csv", row.names = FALSE)
+utils::write.csv(comparison_df, "analysis/out/data_ch_dataset_vs_legacy.csv", row.names = FALSE)
 
 cat("Common series:", length(common), "\n")
 print(table(comparison_df$status, useNA = "ifany"))

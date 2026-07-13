@@ -56,6 +56,7 @@ analysis/Rda/fit_*
 analysis/Rda/factor_vintages*
 analysis/Rda/insample*
 fits/
+outputs/
 
 # Benchmark literature PDFs (see analysis/benchmarks/literature.md)
 analysis/benchmarks/*.pdf

@@ -1,6 +1,5 @@
 
-rm(list = ls())
-cat("\014")
+# Run from the repository root.
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #
@@ -41,15 +40,15 @@ library(foreach)
 library(doParallel)
 library(readxl)
 
-source("code/lib/functions_model.R")
-#source("code/lib/functions_backcast_euler.R")
-source("code/lib/functions_backcast.R")
+library(waiind)
+
+fit_root <- "fits/updated"  # where model fits are written (git-ignored)
 
 
 # IMPORT DATA -------------------------------------------------------------
 
 # for Switzerland
-load("code/Rda/data_ch_dataset_test.Rda")
+load("analysis/Rda/data_ch_dataset_test.Rda")
 
 # # discontinue retail data
 # dat$flows[which(grepl(pattern = "rtt", names(dat$flows)))] <- 
@@ -95,15 +94,12 @@ date_vec <- seq(start_date, end_date, 1/48)
 
 
  foreach(ix = date_vec,
-         .packages = c("Matrix", "zoo","dplyr",
+         .packages = c("waiind", "Matrix", "zoo","dplyr",
                        "tidyr", "forecast")) %do% { # %dopar% {
-                        
-                        # source all functions to nodes
-                        source("code/lib/functions_model.R")
-                        source("code/lib/functions_backcast.R")
-                        
+
                         for(xdat in datasets){
-                          for(run_mod in models){
+                          for(model_name in names(models)){
+                            run_mod <- models[[model_name]]
                             
                             # prepare data
                             dat_realtime <- cut_data_real_time(xdat, ix, GDP_gr_vintages)
@@ -123,7 +119,8 @@ date_vec <- seq(start_date, end_date, 1/48)
                                            stocks = dat_realtime$stocks,
                                            target = "ch.seco.gdp.real.gdp.ssa",
                                            date = ix,
-                                           dataset_used = dataset_used)
+                                           dataset_used = dataset_used,
+                                           output_dir = if (model_name == "ar") file.path(fit_root, "ar") else fit_root)
                             rm(out, dat_realtime)
                             invisible(gc())
                             

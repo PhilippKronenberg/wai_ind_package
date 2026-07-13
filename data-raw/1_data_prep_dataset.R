@@ -1,5 +1,4 @@
-rm(list = ls())
-cat("\014")
+# Run from the repository root.
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #
@@ -70,15 +69,13 @@ cat("\014")
 #
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-project_dir <- "C:/Users/kphilipp/GitHub/wai_ind/"
-setwd(project_dir)
+# Paths are relative to the repository root.
+project_dir <- "."
 
-#metadata_path <- file.path(project_dir, "code", "data_meta.xlsx")
-#metadata_path <- file.path(project_dir, "code", "data_meta_new.xlsx")
-metadata_path <- file.path(project_dir, "code", "data_meta_test.xlsx")
-dataset_dir <- file.path(project_dir, "data", "dataset")
-rda_dir <- file.path(project_dir, "code", "Rda")
-out_dir <- file.path(project_dir, "code", "out")
+metadata_path <- file.path("data-raw", "data_meta.xlsx")
+dataset_dir <- file.path(project_dir, "data", "dataset")  # raw source files (not in the repo)
+rda_dir <- file.path("analysis", "Rda")
+out_dir <- file.path("analysis", "out")
 
 dir.create(rda_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
@@ -97,7 +94,7 @@ library(forecast)
 library(dplyr)
 library(tsbox)
 library(tseries)
-source(file.path(project_dir, "code", "lib", "functions_backcast.R"))
+library(waiind)
 
 # Load variable metadata that controls source ordering, frequency, and transformation.
 metadata <- openxlsx::read.xlsx(metadata_path, sheet = "variables") |>

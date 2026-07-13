@@ -12,14 +12,11 @@
 # source analytics_data.R first.
 # -----------------------------------------------------------------------------
 
-source("code/5_plots/analytics_functions.R")
-load_analytics_packages()
-initialize_plots_insample_context()
+source("analysis/5_plots/_setup.R")
 
 #if (!exists("plots_insample_data_ready", inherits = FALSE)) {
-  source("code/5_plots/analytics_data.R")
+  source("analysis/5_plots/analytics_data.R")
 #}
-source("code/5_plots/analytics_functions.R") # load the plotting functions again to ensure they are available in this context.
 
 # -----------------------------------------------------------------------------
 # Plot Style and Crisis Windows
@@ -122,7 +119,7 @@ c <- ggplot() +
   geom_rect(data = crises, aes(xmin=Peak, xmax=Trough, ymin=-Inf, ymax=Inf), 
             fill='grey80', alpha = 0.2) 
 ggarrange(a, b, c, ncol = 1, nrow = 3, heights = c(4,2,2), align = "hv")
-ggsave(output_figure_path("history_full_05.pdf"), width = 33, height = 25, units = "cm")
+ggsave(output_figure_path("history_full_05.pdf", figures_dir), width = 33, height = 25, units = "cm")
 
 
 # -----------------------------------------------------------------------------
@@ -204,7 +201,7 @@ ggplot() +
   theme(axis.text.x = element_text(size = rel(1), angle = 00)) +
   geom_rect(data = crises, aes(xmin=Peak, xmax=Trough, ymin=-Inf, ymax=Inf), 
             fill='grey80', alpha = 0.2)
-ggsave(output_figure_path("history_sequence_crisis.pdf"), width = 25, height = 12, units = "cm")
+ggsave(output_figure_path("history_sequence_crisis.pdf", figures_dir), width = 25, height = 12, units = "cm")
 
 # Define policy-event markers used in the dedicated Corona-period chart.
 corona_plot_end_date <- as.Date("2022-04-07")
@@ -262,7 +259,7 @@ ggplot(mapping = aes(x = time, y = value)) +
         plot.margin = unit(c(0.2,1.8,0.1,0.5), "cm"),
         panel.grid.minor.y = element_blank()) +
   guides(color=guide_legend(ncol=3, override.aes = list(color = "white")))
-ggsave(output_figure_path("history_corona_crisis.pdf"), width = 20, height = 14, units = "cm")
+ggsave(output_figure_path("history_corona_crisis.pdf", figures_dir), width = 20, height = 14, units = "cm")
 
 # Rebuild the crisis windows once more for the GDP-only quarterly history chart.
 startdate <- "2005-01-01"
@@ -288,7 +285,7 @@ ggplot() +
   #scale_y_continuous(breaks = seq(-35,5,5)) +
   #geom_hline(yintercept=0, linetype="dotted", color = "black", size = 0.3) +
   geom_rect(data = crises, aes(xmin=Peak, xmax=Trough, ymin=-Inf, ymax=Inf), fill='grey80', alpha = 0.2)
-ggsave(output_figure_path("GDP_qoq.pdf"), width = 20, height = 10, units = "cm")
+ggsave(output_figure_path("GDP_qoq.pdf", figures_dir), width = 20, height = 10, units = "cm")
 
 
 # -----------------------------------------------------------------------------
@@ -339,24 +336,24 @@ tab_snb_qoq      <- rescale_to_gdp(tab_snb,      hist_tab_gr)      # SNB-BCI
 tab_baro_qoq     <- rescale_to_gdp(tab_baro,     hist_tab_gr)      # KOF-BARO
 # Rescale benchmark indicators to GDP moments so the visual comparison is about
 # co-movement rather than raw units.
-d_yoy <- plot_comparison(tab_wai_yoy, wwa_gr_df_yoy,    "SECO-WEA", crises, hist_tab_gr_yoy, "SECO-WEA vs WAI (YoY)")
-e_yoy <- plot_comparison(tab_wai_yoy, fcurve_gr_df_yoy, "F-Curve",  crises, hist_tab_gr_yoy, "F-Curve vs WAI (YoY)")
-f_yoy <- plot_comparison(tab_wai_yoy, tab_kss_yoy,      "SECO-SEC", crises, hist_tab_gr_yoy, "SECO-SEC vs WAI (YoY)")
-g_yoy <- plot_comparison(tab_wai_yoy, tab_snb_yoy,      "SNB-BCI",  crises, hist_tab_gr_yoy, "SNB-BCI vs WAI (YoY)")
-h_yoy <- plot_comparison(tab_wai_yoy, tab_baro_yoy,     "KOF-BARO", crises, hist_tab_gr_yoy, "KOF-BARO vs WAI (YoY)")
+d_yoy <- plot_comparison(tab_wai_yoy, wwa_gr_df_yoy,    "SECO-WEA", crises, hist_tab_gr_yoy, sample_end_date, "SECO-WEA vs WAI (YoY)")
+e_yoy <- plot_comparison(tab_wai_yoy, fcurve_gr_df_yoy, "F-Curve",  crises, hist_tab_gr_yoy, sample_end_date, "F-Curve vs WAI (YoY)")
+f_yoy <- plot_comparison(tab_wai_yoy, tab_kss_yoy,      "SECO-SEC", crises, hist_tab_gr_yoy, sample_end_date, "SECO-SEC vs WAI (YoY)")
+g_yoy <- plot_comparison(tab_wai_yoy, tab_snb_yoy,      "SNB-BCI",  crises, hist_tab_gr_yoy, sample_end_date, "SNB-BCI vs WAI (YoY)")
+h_yoy <- plot_comparison(tab_wai_yoy, tab_baro_yoy,     "KOF-BARO", crises, hist_tab_gr_yoy, sample_end_date, "KOF-BARO vs WAI (YoY)")
 col_yoy <- ggarrange(d_yoy, e_yoy, f_yoy, g_yoy, h_yoy,
                      ncol = 1, nrow = 5, align = "hv")
 # Build the matching set of QoQ comparison panels with the same layout.
-d_qoq <- plot_comparison(tab_gr, wwa_gr_df_qoq,    "SECO-WEA", crises, hist_tab_gr, "SECO-WEA vs WAI (QoQ)", ylim_fixed = c(-25, 25))
-e_qoq <- plot_comparison(tab_gr, fcurve_gr_df_qoq, "F-Curve",  crises, hist_tab_gr, "F-Curve vs WAI (QoQ)",  ylim_fixed = c(-25, 25))
-f_qoq <- plot_comparison(tab_gr, tab_kss_qoq,      "SECO-SEC", crises, hist_tab_gr, "SECO-SEC vs WAI (QoQ)", ylim_fixed = c(-25, 25))
-g_qoq <- plot_comparison(tab_gr, tab_snb_qoq,      "SNB-BCI",  crises, hist_tab_gr, "SNB-BCI vs WAI (QoQ)",  ylim_fixed = c(-25, 25))
-h_qoq <- plot_comparison(tab_gr, tab_baro_qoq,     "KOF-BARO", crises, hist_tab_gr, "KOF-BARO vs WAI (QoQ)", ylim_fixed = c(-25, 25))
+d_qoq <- plot_comparison(tab_gr, wwa_gr_df_qoq,    "SECO-WEA", crises, hist_tab_gr, sample_end_date, "SECO-WEA vs WAI (QoQ)", ylim_fixed = c(-25, 25))
+e_qoq <- plot_comparison(tab_gr, fcurve_gr_df_qoq, "F-Curve",  crises, hist_tab_gr, sample_end_date, "F-Curve vs WAI (QoQ)",  ylim_fixed = c(-25, 25))
+f_qoq <- plot_comparison(tab_gr, tab_kss_qoq,      "SECO-SEC", crises, hist_tab_gr, sample_end_date, "SECO-SEC vs WAI (QoQ)", ylim_fixed = c(-25, 25))
+g_qoq <- plot_comparison(tab_gr, tab_snb_qoq,      "SNB-BCI",  crises, hist_tab_gr, sample_end_date, "SNB-BCI vs WAI (QoQ)",  ylim_fixed = c(-25, 25))
+h_qoq <- plot_comparison(tab_gr, tab_baro_qoq,     "KOF-BARO", crises, hist_tab_gr, sample_end_date, "KOF-BARO vs WAI (QoQ)", ylim_fixed = c(-25, 25))
 col_qoq <- ggarrange(d_qoq, e_qoq, f_qoq, g_qoq, h_qoq,
                      ncol = 1, nrow = 5, align = "hv")
 final_fig <- ggarrange(col_yoy, col_qoq, ncol = 2, nrow = 1, align = "hv")
 final_fig
-ggsave(output_figure_path("history_comparison_yoy_qoq.pdf"),
+ggsave(output_figure_path("history_comparison_yoy_qoq.pdf", figures_dir),
        final_fig, width = 44, height = 44, units = "cm")
 
 # Load the alternative WAI fits and compare each specification back to the main WAI.
@@ -365,23 +362,23 @@ result_wai <- list(
   tab_gr_qoq = tab_gr,
   tab_gr_lv = tab_gr_lv
 )
-result_wai_no_sv <- extract_wai_data("fits/updated/full_no_sv/fit_2025.979.Rda")
-result_wai_only_monthly_no_sv <- extract_wai_data("fits/updated/only_monthly_no_sv/fit_2025.979.Rda")
-result_wai_no_hf <- extract_wai_data("fits/updated/only_monthly/fit_2025.979.Rda")
-result_wai_no_financial <- extract_wai_data("fits/updated/no_financial/fit_2025.979.Rda")
-#result_wai_only_total_retail <- extract_wai_data(latest_fit_file(file.path(sample_config$fit_root, "only_total_retail")))
+result_wai_no_sv <- extract_wai_data(file.path(sample_config$fit_root, "updated/full_no_sv/fit_2025.979.Rda"))
+result_wai_only_monthly_no_sv <- extract_wai_data(file.path(sample_config$fit_root, "updated/only_monthly_no_sv/fit_2025.979.Rda"))
+result_wai_no_hf <- extract_wai_data(file.path(sample_config$fit_root, "updated/only_monthly/fit_2025.979.Rda"))
+result_wai_no_financial <- extract_wai_data(file.path(sample_config$fit_root, "updated/no_financial/fit_2025.979.Rda"))
+#result_wai_only_total_retail <- extract_wai_data(latest_fit_file(file.path(sample_config$fit_root, "only_total_retail"), sample_end_fit_decimal))
 result_wai_no_sv_qoq_scaled <- rescale_to_gdp(result_wai_no_sv$tab_gr_qoq, hist_tab_gr)
 result_wai_only_monthly_no_sv_qoq_scaled <- rescale_to_gdp(result_wai_only_monthly_no_sv$tab_gr_qoq, hist_tab_gr)
 result_wai_no_hf_qoq_scaled <- rescale_to_gdp(result_wai_no_hf$tab_gr_qoq, hist_tab_gr)
 result_wai_no_financial_qoq_scaled <- rescale_to_gdp(result_wai_no_financial$tab_gr_qoq, hist_tab_gr)
-kk <- plot_comparison(result_wai$tab_gr_qoq, result_wai_no_sv_qoq_scaled, "WAI-SV", crises, hist_tab_gr, plot_title = "WAI-SV vs WAI", ylim_fixed = c(-25, 25))
-ll <- plot_comparison(result_wai$tab_gr_qoq, result_wai_only_monthly_no_sv_qoq_scaled, "WAI-(SV+HF)", crises, hist_tab_gr, plot_title = "WAI-(SV+HF) vs WAI", ylim_fixed = c(-25, 25)) # F-Curve has some missing values
-mm <- plot_comparison(result_wai$tab_gr_qoq, result_wai_no_hf_qoq_scaled, "WAI-HF", crises, hist_tab_gr, plot_title = "WAI-HF vs WAI", ylim_fixed = c(-25, 25)) # F-Curve has some missing values
-nn <- plot_comparison(result_wai$tab_gr_qoq, result_wai_no_financial_qoq_scaled, "WAI-FIN", crises, hist_tab_gr, plot_title = "WAI-FIN vs WAI", ylim_fixed = c(-25, 25))
-#oo <- plot_comparison(result_wai$tab_gr_qoq, result_wai_only_total_retail$tab_gr_qoq, "WAI-Retail", crises, hist_tab_gr, plot_title = "WAI-Retail vs WAI", ylim_fixed = c(-25, 25))
+kk <- plot_comparison(result_wai$tab_gr_qoq, result_wai_no_sv_qoq_scaled, "WAI-SV", crises, hist_tab_gr, sample_end_date, plot_title = "WAI-SV vs WAI", ylim_fixed = c(-25, 25))
+ll <- plot_comparison(result_wai$tab_gr_qoq, result_wai_only_monthly_no_sv_qoq_scaled, "WAI-(SV+HF)", crises, hist_tab_gr, sample_end_date, plot_title = "WAI-(SV+HF) vs WAI", ylim_fixed = c(-25, 25)) # F-Curve has some missing values
+mm <- plot_comparison(result_wai$tab_gr_qoq, result_wai_no_hf_qoq_scaled, "WAI-HF", crises, hist_tab_gr, sample_end_date, plot_title = "WAI-HF vs WAI", ylim_fixed = c(-25, 25)) # F-Curve has some missing values
+nn <- plot_comparison(result_wai$tab_gr_qoq, result_wai_no_financial_qoq_scaled, "WAI-FIN", crises, hist_tab_gr, sample_end_date, plot_title = "WAI-FIN vs WAI", ylim_fixed = c(-25, 25))
+#oo <- plot_comparison(result_wai$tab_gr_qoq, result_wai_only_total_retail$tab_gr_qoq, "WAI-Retail", crises, hist_tab_gr, sample_end_date, plot_title = "WAI-Retail vs WAI", ylim_fixed = c(-25, 25))
 comparison_wai_fig <- ggarrange(kk, ll, mm, nn, ncol = 1, nrow = 4, align = "hv")
 comparison_wai_fig
-ggsave(output_figure_path("history_comparison_wai.pdf"), comparison_wai_fig, width = 33, height = 35.2, units = "cm")
+ggsave(output_figure_path("history_comparison_wai.pdf", figures_dir), comparison_wai_fig, width = 33, height = 35.2, units = "cm")
 
 
 # -----------------------------------------------------------------------------
@@ -394,10 +391,20 @@ library(dplyr)
 library(tidyr)
 library(purrr)
 library(lubridate)
+# Bundle the data objects the in-sample table builders need (their former
+# implicit globals) into an explicit inputs list.
+insample_inputs <- mget(c(
+  "tab_gr", "tab_gr_lv", "x_hist_gr_yoy", "x_hist_gr_ann",
+  "tab_wai_yoy", "wwa_gr_df", "wwa_gr_df_qoq", "fcurve_gr_df",
+  "tab_kss", "tab_snb", "tab_baro",
+  "result_wai", "result_wai_no_sv", "result_wai_only_monthly_no_sv",
+  "result_wai_no_hf", "result_wai_no_financial"
+))
+
 methods <- c("mean", "last", "last_month")
-combined_tables_list <- lapply(methods, get_combined_cor_table)
+combined_tables_list <- lapply(methods, get_combined_cor_table, inputs = insample_inputs)
 names(combined_tables_list) <- methods
-combined_tables_list_indicators <- lapply(methods, get_combined_cor_table, analysis_set = "indicators")
+combined_tables_list_indicators <- lapply(methods, get_combined_cor_table, analysis_set = "indicators", inputs = insample_inputs)
 names(combined_tables_list_indicators) <- methods
 # Add the aggregation-method labels explicitly so the combined LaTeX table can
 # show grouped rows for mean, last, and last-month aggregation.
@@ -501,13 +508,15 @@ cor_tables_indicators <- list(
 render_correlation_heatmap(
   cor_tables = cor_tables_indicators,
   series_order = c("WAI", "SECO-WWA", "F-CURVE", "SECO-SEC", "SNB-BCI", "KOF-BARO"),
-  output_file = "correlation_heatmap_indicators.pdf"
+  output_file = "correlation_heatmap_indicators.pdf",
+  figures_dir = figures_dir
 )
 # Render the benchmark-indicator and WAI-variant heatmaps separately.
 render_correlation_heatmap(
   cor_tables = cor_tables_wai,
   series_order = c("WAI", "WAI-SV", "WAI-(SV+HF)", "WAI-HF", "WAI-FIN"), #, "WAI-Retail"),
-  output_file = "correlation_heatmap_WAI.pdf"
+  output_file = "correlation_heatmap_WAI.pdf",
+  figures_dir = figures_dir
 )
 
 
@@ -525,7 +534,7 @@ library(kableExtra)
 # Build the full set of in-sample fit tables for one model family and write
 # them with a dedicated output suffix.
 build_insample_table_set <- function(analysis_set, file_suffix, caption_subject) {
-  insample_fit_tables <- lapply(methods, get_insample_fit_table, analysis_set = analysis_set)
+  insample_fit_tables <- lapply(methods, get_insample_fit_table, analysis_set = analysis_set, inputs = insample_inputs)
   names(insample_fit_tables) <- methods
   
   # Convert raw fit metrics into relative-to-WAI error tables before annotation.
@@ -610,31 +619,31 @@ build_insample_table_set <- function(analysis_set, file_suffix, caption_subject)
     r2_list,
     caption = paste("In-sample R-squared by lag and aggregation method for", caption_subject)
   )
-  write_table_output(paste0("table_output_R2_", file_suffix, ".tex"), results_R2$table_tex)
+  write_table_output(paste0("table_output_R2_", file_suffix, ".tex"), results_R2$table_tex, tables_dir)
   
   results_rmse <- create_combined_latex_table(
     rel_rmse_list,
     caption = paste("In-sample relative RMSE by lag and aggregation method for", caption_subject)
   )
-  write_table_output(paste0("table_output_rmse_", file_suffix, ".tex"), results_rmse$table_tex)
+  write_table_output(paste0("table_output_rmse_", file_suffix, ".tex"), results_rmse$table_tex, tables_dir)
   
   results_mae <- create_combined_latex_table(
     rel_mae_list,
     caption = paste("In-sample relative MAE by lag and aggregation method for", caption_subject)
   )
-  write_table_output(paste0("table_output_mae_", file_suffix, ".tex"), results_mae$table_tex)
+  write_table_output(paste0("table_output_mae_", file_suffix, ".tex"), results_mae$table_tex, tables_dir)
   
   results_abs_rmse <- create_combined_latex_table(
     abs_rmse_list,
     caption = paste("In-sample absolute RMSE by lag and aggregation method for", caption_subject)
   )
-  write_table_output(paste0("table_output_abs_rmse_", file_suffix, ".tex"), results_abs_rmse$table_tex)
+  write_table_output(paste0("table_output_abs_rmse_", file_suffix, ".tex"), results_abs_rmse$table_tex, tables_dir)
   
   results_abs_mae <- create_combined_latex_table(
     abs_mae_list,
     caption = paste("In-sample absolute MAE by lag and aggregation method for", caption_subject)
   )
-  write_table_output(paste0("table_output_abs_mae_", file_suffix, ".tex"), results_abs_mae$table_tex)
+  write_table_output(paste0("table_output_abs_mae_", file_suffix, ".tex"), results_abs_mae$table_tex, tables_dir)
   
   list(
     fit_tables = insample_fit_tables,
@@ -659,7 +668,7 @@ build_insample_crisis_table <- function() {
   )
   
   results_by_method <- lapply(crisis_methods, function(method_name) {
-    insample_error_details <- get_insample_error_details(method_name, analysis_set = "indicators")
+    insample_error_details <- get_insample_error_details(method_name, analysis_set = "indicators", inputs = insample_inputs)
     error_tables_insample_total <- create_error_summary_tables(
       insample_error_details,
       benchmark_model_order,
@@ -688,7 +697,8 @@ build_insample_crisis_table <- function() {
     )
     write_table_output(
       paste0("table_output_rmse_insample_crisis_", method_name, ".tex"),
-      results_rmse_insample_crisis$table_tex
+      results_rmse_insample_crisis$table_tex,
+      tables_dir
     )
     
     list(

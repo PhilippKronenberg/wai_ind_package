@@ -1,6 +1,5 @@
 
-rm(list = ls())
-cat("\014")
+# Run from the repository root.
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #
@@ -23,22 +22,24 @@ library(zoo)      # for as.yearmon, as.yearqtr
 
 # IMPORT DATA -------------------------------------------------------------
 
-load("code/Rda/results_evaluation.Rda")
-load("code/Rda/data_ch_dataset_test.Rda")
+library(waiind)
 
-source("code/lib/functions_model.R")
+fit_root <- "fits"  # root of the model fits (git-ignored)
+
+load("analysis/Rda/results_evaluation.Rda")
+load("analysis/Rda/data_ch_dataset_test.Rda")
 
 # Metadata Table ------------------------------------------------------------------
 
 # Get Metadata & Keys
-metadata <- openxlsx::read.xlsx("code/data_meta.xlsx",sheet="variables")
+metadata <- openxlsx::read.xlsx("data-raw/data_meta.xlsx",sheet="variables")
 
 # Rename Columns
 names(metadata)[names(metadata) == "Flow"] <- "Type"
 names(metadata)[names(metadata) == "keys"] <- "Keys"
 
 # Add End Date From Raw Data Availability File
-date_ranges <- read.csv("code/out/data_ch_dataset_raw_start_end.csv", stringsAsFactors = FALSE)
+date_ranges <- read.csv("analysis/out/data_ch_dataset_raw_start_end.csv", stringsAsFactors = FALSE)
 if (!"Keys" %in% names(date_ranges) && "series" %in% names(date_ranges)) {
   names(date_ranges)[names(date_ranges) == "series"] <- "Keys"
 }
@@ -154,36 +155,35 @@ print(xtable(metadata), include.rownames=FALSE, type = "latex", file = "figures/
 
 # Lambda Table ------------------------------------------------------------
 
-source("code/lib/functions_backcast.R")
 
-result_wai <- extract_wai_data("C:/Users/kphilipp/GitHub/wai_ind/fits/full/testlauf5_20_04_2026.Rda")
-result_wai_no_sv <- extract_wai_data("C:/Users/kphilipp/GitHub/wai_ind/fits/updated/full_no_sv/fit_2025.979.Rda")
-result_wai_only_monthly_no_sv <- extract_wai_data("C:/Users/kphilipp/GitHub/wai_ind/fits/updated/only_monthly_no_sv/fit_2025.979.Rda")
-result_wai_no_hf <- extract_wai_data("C:/Users/kphilipp/GitHub/wai_ind/fits/updated/only_monthly/fit_2025.979.Rda")
-result_wai_no_financial <- extract_wai_data("C:/Users/kphilipp/GitHub/wai_ind/fits/updated/no_financial/fit_2025.979.Rda")
-#result_wai_only_total_retail <- extract_wai_data("C:/Users/kphilipp/GitHub/wai_ind/fits/updated/only_total_retail/fit_2025.979.Rda")
+result_wai <- extract_wai_data(file.path(fit_root, "full/testlauf5_20_04_2026.Rda"))
+result_wai_no_sv <- extract_wai_data(file.path(fit_root, "updated/full_no_sv/fit_2025.979.Rda"))
+result_wai_only_monthly_no_sv <- extract_wai_data(file.path(fit_root, "updated/only_monthly_no_sv/fit_2025.979.Rda"))
+result_wai_no_hf <- extract_wai_data(file.path(fit_root, "updated/only_monthly/fit_2025.979.Rda"))
+result_wai_no_financial <- extract_wai_data(file.path(fit_root, "updated/no_financial/fit_2025.979.Rda"))
+#result_wai_only_total_retail <- extract_wai_data(file.path(fit_root, "updated/only_total_retail/fit_2025.979.Rda"))
 
 
-load("C:/Users/kphilipp/GitHub/wai_ind/fits/updated/full_RT/fit_2025.979.Rda")
+load(file.path(fit_root, "updated/full_RT/fit_2025.979.Rda"))
 dat_last <- mod
 var_names_last <- dat_last$inventory$key
-load("C:/Users/kphilipp/GitHub/wai_ind/fits/updated/full_no_sv/fit_2025.979.Rda")
+load(file.path(fit_root, "updated/full_no_sv/fit_2025.979.Rda"))
 dat_full_No_SV <- mod
 var_names_full_No_SV <- dat_full_No_SV$inventory$key
-load("C:/Users/kphilipp/GitHub/wai_ind/fits/updated/only_monthly_no_sv/fit_2025.979.Rda")
+load(file.path(fit_root, "updated/only_monthly_no_sv/fit_2025.979.Rda"))
 dat_only_monthly_No_SV <- mod
 var_names_only_monthly_No_SV <- dat_only_monthly_No_SV$inventory$key
-load("C:/Users/kphilipp/GitHub/wai_ind/fits/updated/only_monthly/fit_2025.979.Rda")
+load(file.path(fit_root, "updated/only_monthly/fit_2025.979.Rda"))
 dat_only_monthly <- mod
 var_names_only_monthly <- dat_only_monthly$inventory$key
-load("C:/Users/kphilipp/GitHub/wai_ind/fits/updated/no_financial/fit_2025.979.Rda")
+load(file.path(fit_root, "updated/no_financial/fit_2025.979.Rda"))
 dat_no_financial <- mod
 var_names_no_financial <- dat_no_financial$inventory$key
-# load("C:/Users/kphilipp/GitHub/wai_ind/fits/only_total_retail/fit_2025.979.Rda")
+# load(file.path(fit_root, "only_total_retail/fit_2025.979.Rda"))
 # dat_only_total_retail <- out
 # var_names_only_total_retail <- dat_only_total_retail$inventory$key
 
-#metadata <- openxlsx::read.xlsx("code/data_meta.xlsx",sheet="variables")
+#metadata <- openxlsx::read.xlsx("data-raw/data_meta.xlsx",sheet="variables")
 
 
 
@@ -468,20 +468,20 @@ print(
 
 # Lambda Table ------------------------------------------------------------
 
-load("C:/Users/kphilipp/GitHub/wai_ind/fits/updated/full_RT/fit_2025.979.Rda")
+load(file.path(fit_root, "updated/full_RT/fit_2025.979.Rda"))
 dat_last <- mod
 var_names_last <- dat_last$inventory$key
-load("C:/Users/kphilipp/GitHub/wai_ind/fits/updated/full_RT/fit_2008.833.Rda")
+load(file.path(fit_root, "updated/full_RT/fit_2008.833.Rda"))
 dat_PG <- mod
 var_names_PG <- dat_PG$inventory$key
-load("C:/Users/kphilipp/GitHub/wai_ind/fits/updated/full_RT/fit_2009.771.Rda")
+load(file.path(fit_root, "updated/full_RT/fit_2009.771.Rda"))
 dat_GR <- mod
 var_names_GR <- dat_GR$inventory$key
-load("C:/Users/kphilipp/GitHub/wai_ind/fits/updated/full_RT/fit_2020.Rda")
+load(file.path(fit_root, "updated/full_RT/fit_2020.Rda"))
 dat_PC <- mod
 var_names_PC <- dat_PC$inventory$key
 
-#metadata <- openxlsx::read.xlsx("code/data_meta.xlsx",sheet="variables")
+#metadata <- openxlsx::read.xlsx("data-raw/data_meta.xlsx",sheet="variables")
 
 
 
@@ -629,10 +629,10 @@ print(
 # Serial Correlation Table ---------------------------------------------
 
 # get metadata
-metadata <- openxlsx::read.xlsx("code/data_meta.xlsx",sheet="variables")
+metadata <- openxlsx::read.xlsx("data-raw/data_meta.xlsx",sheet="variables")
 
 # get in-sample results
-load("C:/Users/kphilipp/GitHub/wai_ind/fits/updated/full_RT/fit_2025.979.Rda")
+load(file.path(fit_root, "updated/full_RT/fit_2025.979.Rda"))
 
 # get variable names and sort them according to the in-sample results
 mod_var_names <- colnames(out$data)
@@ -695,7 +695,7 @@ data_vec <- c(dat$stocks,dat$flows)
 names(data_vec) <- c(names(dat$stocks),names(dat$flows))
 
 # get metadata
-metadata <- openxlsx::read.xlsx("code/data_meta.xlsx",sheet="variables")
+metadata <- openxlsx::read.xlsx("data-raw/data_meta.xlsx",sheet="variables")
 
 # get variable names and sort them according to the in-sample results
 mod_var_names <- names(data_vec)
