@@ -19,3 +19,8 @@ Wide table of annotated values.
 \description{
 Annotate relative error tables with significance stars
 }
+\examples{
+\dontrun{
+annotated <- annotate_relative_errors(rel$RMSE_relative, fit_tabs$PVAL_RMSE, "RMSE")
+}
+}

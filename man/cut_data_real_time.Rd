@@ -22,3 +22,11 @@ Like \code{\link[=cut_data]{cut_data()}}, but instead of truncating the quarterl
 series, replaces it with the newest GDP vintage that was available at
 \code{current_date}.
 }
+\examples{
+\donttest{
+data(data_ch_dataset_test)
+vintages <- get_real_time_gdp_vintages("quarterly")
+cut <- cut_data_real_time(data_ch_dataset_test, 2024.5, vintages)
+utils::tail(cut$flows[["ch.seco.gdp.real.gdp.ssa"]])
+}
+}

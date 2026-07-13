@@ -17,3 +17,7 @@ The nowcast variance.
 \description{
 Extract the nowcast variance from a fit object
 }
+\examples{
+fit <- list(nowcast_var = stats::ts(c(0.02, 0.04), start = 2024, frequency = 4))
+retrieve_nowcast_var(fit, model = "wai")
+}

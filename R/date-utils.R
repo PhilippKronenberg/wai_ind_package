@@ -53,6 +53,11 @@ is_crisis_period <- function(date_vec) {
 #' @return A `ts` with frequency 48; weeks without observations are `NA`.
 #'
 #' @importFrom stats time as.ts aggregate
+#' @examples
+#' daily <- zoo::zoo(rnorm(120),
+#'                   order.by = seq(as.Date("2024-01-01"), by = "day", length.out = 120))
+#' weekly <- daily2weekly(daily)
+#' stats::frequency(weekly)
 #' @export
 daily2weekly <- function(x){
 
@@ -93,6 +98,10 @@ daily2weekly <- function(x){
 #' @importFrom dplyr mutate group_by filter summarise ungroup rename slice_max select
 #' @importFrom zoo as.yearqtr
 #' @importFrom lubridate floor_date
+#' @examples
+#' df <- data.frame(time = seq(as.Date("2023-01-01"), by = "month", length.out = 12),
+#'                  value = rnorm(12))
+#' aggregate_predictor_to_quarterly(df, cut_off_month_pos = 1, method = "mean")
 #' @export
 aggregate_predictor_to_quarterly <- function(df, cut_off_month_pos = NULL, method = "cut_off") {
   df_name <- deparse(substitute(df))

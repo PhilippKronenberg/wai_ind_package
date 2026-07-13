@@ -23,3 +23,10 @@ Aggregates out-of-sample errors per target vintage, computes relative
 RMSE/MAE against the WAI with Diebold-Mariano significance stars, and
 returns per-method wide tables.
 }
+\examples{
+\dontrun{
+# combined_results is the long out-of-sample error table built by
+# analysis/5_plots/analytics_out-of-sample.R:
+rel <- create_rel_error_tables(combined_results, model_order = c("WAI", "AR"))
+}
+}

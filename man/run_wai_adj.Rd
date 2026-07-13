@@ -42,3 +42,12 @@ Runs \code{\link[=hfdfm]{hfdfm()}} with the settings used in the WAI out-of-samp
 evaluation and windows the factor and nowcast output to the
 evaluation date.
 }
+\examples{
+\dontrun{
+# Full MCMC estimation at one evaluation date, saving the fit:
+fit <- run_wai_adj(flows = dat$flows, stocks = dat$stocks,
+                   target = "ch.seco.gdp.real.gdp.ssa",
+                   date = 2024.5, dataset_used = "full_RT",
+                   output_dir = "fits/updated")
+}
+}

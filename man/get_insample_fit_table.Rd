@@ -35,3 +35,9 @@ Regresses GDP growth on each (quarterly-aggregated) series at lags -4
 to 0 and reports RMSE, MAE and R-squared, plus Diebold-Mariano
 p-values of each series against the WAI.
 }
+\examples{
+\dontrun{
+fit_tabs <- get_insample_fit_table("mean", "indicators", inputs = insample_inputs)
+fit_tabs$RMSE
+}
+}

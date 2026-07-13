@@ -17,3 +17,8 @@ A list with components \code{flows} and \code{stocks}.
 Removes the sectoral FSO retail trade series (NOGA 0803-0808),
 keeping only the total retail series.
 }
+\examples{
+data(data_ch_dataset_test)
+total_retail_only <- drop_retail(data_ch_dataset_test)
+length(total_retail_only$flows)
+}

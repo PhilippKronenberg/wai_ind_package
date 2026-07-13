@@ -17,3 +17,10 @@ The selected vintage column (numeric vector).
 \description{
 Select the newest GDP vintage available at a given date
 }
+\examples{
+\donttest{
+vintages <- get_real_time_gdp_vintages("quarterly")
+v <- select_most_recent_GDP_vintage(2024.5, vintages)
+utils::tail(stats::na.omit(v))
+}
+}

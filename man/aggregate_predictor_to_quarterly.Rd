@@ -32,3 +32,8 @@ data frame is returned with only a \code{yearqtr} column added. This
 legacy behavior is kept for compatibility with the analysis scripts;
 avoid renaming objects passed to it.
 }
+\examples{
+df <- data.frame(time = seq(as.Date("2023-01-01"), by = "month", length.out = 12),
+                 value = rnorm(12))
+aggregate_predictor_to_quarterly(df, cut_off_month_pos = 1, method = "mean")
+}

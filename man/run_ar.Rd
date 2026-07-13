@@ -43,3 +43,12 @@ Estimates an AR(1) model on the target series and produces a one-step
 nowcast with variance. Used as the benchmark model in the
 out-of-sample evaluation.
 }
+\examples{
+\donttest{
+data(data_ch_dataset_test)
+fit <- run_ar(flows = data_ch_dataset_test$flows, stocks = NULL,
+              target = "ch.seco.gdp.real.gdp.ssa",
+              date = 2024.5, dataset_used = "example")
+fit$nowcast
+}
+}

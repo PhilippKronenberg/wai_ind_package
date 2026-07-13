@@ -116,6 +116,12 @@ read_sheet_info <- function(sheet_name, file_path) {
 #' @param GDP_gr_vintages Vintage table from [get_real_time_gdp_vintages()].
 #'
 #' @return The selected vintage column (numeric vector).
+#' @examples
+#' \donttest{
+#' vintages <- get_real_time_gdp_vintages("quarterly")
+#' v <- select_most_recent_GDP_vintage(2024.5, vintages)
+#' utils::tail(stats::na.omit(v))
+#' }
 #' @export
 select_most_recent_GDP_vintage <- function(current_date, GDP_gr_vintages){
 
@@ -222,6 +228,13 @@ cut_data_helper <- function(x, current_date){
 #' @param GDP_gr_vintages Vintage table from [get_real_time_gdp_vintages()].
 #'
 #' @return A list with components `flows` and `stocks`.
+#' @examples
+#' \donttest{
+#' data(data_ch_dataset_test)
+#' vintages <- get_real_time_gdp_vintages("quarterly")
+#' cut <- cut_data_real_time(data_ch_dataset_test, 2024.5, vintages)
+#' utils::tail(cut$flows[["ch.seco.gdp.real.gdp.ssa"]])
+#' }
 #' @export
 cut_data_real_time <- function(dat, current_date, GDP_gr_vintages){
 

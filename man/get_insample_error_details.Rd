@@ -35,3 +35,9 @@ Runs the lag regressions of \code{\link[=get_insample_fit_table]{get_insample_fi
 full error series per observation date, model, method, lag and
 frequency, for use in \code{\link[=create_error_summary_tables]{create_error_summary_tables()}}.
 }
+\examples{
+\dontrun{
+details <- get_insample_error_details("mean", "indicators", inputs = insample_inputs)
+head(details)
+}
+}

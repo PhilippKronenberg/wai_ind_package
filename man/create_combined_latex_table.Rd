@@ -29,3 +29,9 @@ A list with \code{combined_wide} (the assembled data frame) and
 \description{
 Combine per-method lag tables into one LaTeX table
 }
+\examples{
+\dontrun{
+out <- create_combined_latex_table(list(mean = cor_tab_mean, last = cor_tab_last))
+cat(out$table_tex)
+}
+}

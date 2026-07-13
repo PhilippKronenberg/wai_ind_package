@@ -17,3 +17,8 @@ A list with components \code{flows} and \code{stocks}.
 Removes every weekly series (frequency 48) from the dataset, keeping
 only monthly and quarterly series.
 }
+\examples{
+data(data_ch_dataset_test)
+no_weekly <- drop_weekly(data_ch_dataset_test)
+length(no_weekly$flows)
+}
