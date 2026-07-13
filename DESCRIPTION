@@ -22,11 +22,9 @@ Depends:
 Imports:
     broom,
     dplyr,
-    forecast,
     ggplot2,
     ggpubr,
     graphics,
-    ISOweek,
     kableExtra,
     knitr,
     lubridate,
@@ -35,6 +33,7 @@ Imports:
     plyr,
     purrr,
     readxl,
+    rlang,
     scales,
     stats,
     tibble,
@@ -43,8 +42,10 @@ Imports:
     zoo
 Suggests:
     doParallel,
+    forecast,
     foreach,
     ggsci,
+    ISOweek,
     openxlsx,
     pammtools,
     RColorBrewer,
