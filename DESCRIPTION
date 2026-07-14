@@ -21,7 +21,7 @@ Description: Estimates a high-frequency GDP indicator for Switzerland, the
     mixed-frequency framework of Eckert, Kronenberg, Mikosch and Neuwirth
     (2025, Journal of Applied Econometrics).
 License: MIT + file LICENSE
-URL: https://github.com/PhilippKronenberg/wai_ind_package
+URL: https://github.com/PhilippKronenberg/wai_ind_package, https://philippkronenberg.github.io/wai_ind_package/
 BugReports: https://github.com/PhilippKronenberg/wai_ind_package/issues
 Encoding: UTF-8
 LazyData: true
@@ -32,7 +32,7 @@ Depends:
     R (>= 4.1)
 Imports:
     broom,
-    dplyr,
+    dplyr (>= 1.0.0),
     ggplot2,
     ggpubr,
     graphics,
@@ -48,7 +48,7 @@ Imports:
     scales,
     stats,
     tibble,
-    tidyr,
+    tidyr (>= 1.0.0),
     utils,
     zoo
 Suggests:

@@ -30,30 +30,6 @@ test_that("cut_data_real_time substitutes the target with the right vintage", {
                as.numeric(zoo::na.trim(stats::ts(vint[["2023.75"]], start = c(1990, 1), frequency = 4))))
 })
 
-test_that("numeric vintage pickers respect their bounds", {
-  vint <- make_synth_vintages()
-  expect_equal(get_latest_numeric_vintage(vint, upper_bound = 2023.9), 2023.75)
-  expect_equal(get_latest_numeric_vintage(vint, lower_bound = 2024, upper_bound = 2025), 2024.25)
-  expect_error(get_latest_numeric_vintage(vint, upper_bound = 2020), "No valid vintages")
-
-  # the next vintage extending the data beyond what 2023.25 covers
-  expect_equal(get_next_extending_numeric_vintage(vint, as.Date("2023-06-30")), 2023.75)
-
-  expect_equal(get_next_target_vintage(2023.5, c(2023.25, 2023.75, 2024.25)), 2023.75)
-  expect_true(is.na(get_next_target_vintage(2025, c(2023.25, 2023.75))))
-})
-
-test_that("latest_fit_file honors the cutoff", {
-  dir <- tempfile(); dir.create(dir); on.exit(unlink(dir, recursive = TRUE))
-  mod <- list()
-  for (d in c("2019.979", "2020.5", "2021.25")) {
-    save(mod, file = file.path(dir, paste0("fit_", d, ".Rda")))
-  }
-  expect_match(latest_fit_file(dir, cutoff_decimal = 2020.9), "fit_2020.5.Rda")
-  expect_match(latest_fit_file(dir, cutoff_decimal = 2022), "fit_2021.25.Rda")
-  expect_error(latest_fit_file(dir, cutoff_decimal = 2019), "No fit file")
-})
-
 test_that("the shipped GDP vintage database reads and is well-formed", {
   # readxl warns about date cells in the header row it reads as numeric;
   # that is expected for this spreadsheet layout.

@@ -69,6 +69,7 @@ repository.
 Useful links:
 \itemize{
   \item \url{https://github.com/PhilippKronenberg/wai_ind_package}
+  \item \url{https://philippkronenberg.github.io/wai_ind_package/}
   \item Report bugs at \url{https://github.com/PhilippKronenberg/wai_ind_package/issues}
 }
 

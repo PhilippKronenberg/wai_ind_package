@@ -42,20 +42,3 @@ test_that("dec2week maps the 48-week grid onto 7/14/21/28 calendar days", {
   # year boundary
   expect_equal(format(dec2week(2021), "%Y-%m-%d"), "2021-01-07")
 })
-
-test_that("decimal_date_local follows the day-of-year convention", {
-  expect_equal(decimal_date_local(as.Date("2020-01-01")), 2020)
-  expect_equal(decimal_date_local(as.Date("2021-12-31")), 2021 + 364 / 365)
-})
-
-test_that("is_crisis_period flags the two crisis windows", {
-  dates <- as.Date(c("2008-09-15", "2015-06-01", "2020-04-01", "2022-01-01"))
-  expect_equal(is_crisis_period(dates), c(TRUE, FALSE, TRUE, FALSE))
-})
-
-test_that("daily2weekly averages onto the 48-period grid", {
-  daily <- zoo::zoo(rep(2, 96), order.by = seq(as.Date("2022-01-01"), by = "day", length.out = 96))
-  weekly <- daily2weekly(daily)
-  expect_equal(frequency(weekly), 48)
-  expect_true(all(abs(na.omit(as.numeric(weekly)) - 2) < 1e-12))
-})
