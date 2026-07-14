@@ -5,13 +5,21 @@ Version: 0.0.0.9000
 Authors@R:
     person("Philipp", "Kronenberg", email = "PhilippKronenberg@users.noreply.github.com",
            role = c("aut", "cre"))
-Description: Estimates a weekly activity index (WAI) for Switzerland and
-    produces weekly GDP nowcasts and backcasts. The core is a Bayesian
-    mixed-frequency dynamic factor model estimated by Markov chain Monte
-    Carlo sampling, with optional stochastic volatility and serial
-    correlation components. The package also provides tools for real-time
-    GDP vintage handling, out-of-sample forecast evaluation, and the
-    tables and plots used in the accompanying analysis.
+Description: Estimates a high-frequency GDP indicator for Switzerland, the
+    Weekly Activity Index (WAI), by extracting a single dynamic factor from
+    a Bayesian mixed-frequency dynamic factor model that integrates weekly,
+    monthly and quarterly data. Missing and mixed-frequency observations are
+    handled through data augmentation, the factor state equation includes
+    stochastic volatility to capture crisis-period fluctuations, and serial
+    correlation in measurement errors is removed by quasi-differencing.
+    An identification restriction fixes the loading on GDP so that the
+    factor is directly interpretable as weekly GDP growth. The package also
+    provides tools for real-time GDP vintage handling, out-of-sample
+    forecast evaluation, and the tables and plots used in the accompanying
+    analysis. Methodology and empirical results are described in
+    Kronenberg (2026) <doi:10.1186/s41937-026-00157-w>, which extends the
+    mixed-frequency framework of Eckert, Kronenberg, Mikosch and Neuwirth
+    (2025, Journal of Applied Econometrics).
 License: MIT + file LICENSE
 URL: https://github.com/PhilippKronenberg/wai_ind_package
 BugReports: https://github.com/PhilippKronenberg/wai_ind_package/issues
@@ -19,6 +27,7 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
+VignetteBuilder: knitr
 Depends:
     R (>= 4.1)
 Imports:
@@ -53,6 +62,7 @@ Suggests:
     RColorBrewer,
     readr,
     reshape2,
+    rmarkdown,
     strucchange,
     testthat (>= 3.0.0),
     tsbox,
