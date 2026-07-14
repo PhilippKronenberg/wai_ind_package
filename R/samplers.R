@@ -39,6 +39,13 @@ run_sampling <- function(Ymat, target, n, t, t2, p, s, length_sample, burn_in, t
   # initialize progress bar
   pb <- txtProgressBar(style = 3)
 
+  # restore the caller's graphics state once, however this function exits,
+  # instead of resetting it after every plotted iteration below
+  if(plots == TRUE){
+    oldpar <- par(no.readonly = TRUE)
+    on.exit(par(oldpar), add = TRUE)
+  }
+
   # loop until sampling complete
   for(jx in 1:(burn_in + length_sample*thinning)){
 
@@ -120,8 +127,6 @@ run_sampling <- function(Ymat, target, n, t, t2, p, s, length_sample, burn_in, t
                 lty = c(1,2),
                 col = c("black","red"),
                 plot.type="single")
-
-        par(mfrow = c(1,1))
       }
     }
 

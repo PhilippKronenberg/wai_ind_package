@@ -12,3 +12,5 @@
 ^\.mcp\.json$
 ^\.playwright-mcp$
 ^\.vscode$
+^docs$
+^_pkgdown\.yml$

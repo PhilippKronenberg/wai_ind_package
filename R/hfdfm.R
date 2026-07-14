@@ -132,6 +132,9 @@ hfdfm <- function(flows,
   # plot the time series as a check for the user
   if(plots == TRUE){
 
+    oldpar <- par(no.readonly = TRUE)
+    on.exit(par(oldpar), add = TRUE)
+
     tsl <- c(stocks,flows)
     par(mfrow = c(length(unique(inventory$freq)), 1))
     for(x in unique(inventory$freq)){
@@ -141,7 +144,6 @@ hfdfm <- function(flows,
               ylim = c(-15,15),
               plot.type="single")
     }
-    par(mfrow = c(1,1))
 
   }
 

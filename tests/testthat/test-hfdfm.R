@@ -39,3 +39,23 @@ test_that("hfdfm is deterministic given a seed", {
   fit2 <- run_small_hfdfm(7)
   expect_identical(fit1, fit2)
 })
+
+test_that("hfdfm(plots = TRUE) restores the caller's graphics state", {
+  data(data_ch_dataset_test, envir = environment())
+  target <- "ch.seco.gdp.real.gdp.ssa"
+  flows <- lapply(data_ch_dataset_test$flows[c(target, "SWISSMI")], stats::window, start = 2019)
+  stocks <- lapply(data_ch_dataset_test$stocks[1:2], stats::window, start = 2019)
+
+  grDevices::pdf(NULL) # avoid popping up a window/writing Rplots.pdf
+  on.exit(grDevices::dev.off(), add = TRUE)
+  graphics::par(mfrow = c(2, 3))
+  before <- graphics::par(no.readonly = TRUE)
+
+  set.seed(1)
+  suppressMessages(
+    hfdfm(flows = flows, stocks = stocks, target = target,
+          length_sample = 5, burn_in = 2, thinning = 1, plots = TRUE)
+  )
+
+  expect_identical(graphics::par("mfrow"), before$mfrow)
+})

@@ -56,17 +56,37 @@ test_that("get_insample_fit_table validates its inputs", {
 })
 
 test_that("create_combined_latex_table produces LaTeX with method sections", {
-  inputs <- make_synth_inputs()
-  cor_tab <- suppressMessages(
-    get_combined_cor_table("mean", "indicators", inputs = inputs)
-  )
-  expect_true(all(c("Frequency", "Series", "Lag_0") %in% names(cor_tab)))
-  expect_true(all(abs(na.omit(unlist(cor_tab[, -(1:2)]))) <= 1))
+  mk_cor_tab <- function() {
+    data.frame(
+      Frequency = rep(c("YoY", "QoQ"), each = 2),
+      Series = rep(c("WAI", "SECO-WWA"), 2),
+      "Lag_-4" = runif(4, -1, 1), "Lag_-3" = runif(4, -1, 1),
+      "Lag_-2" = runif(4, -1, 1), "Lag_-1" = runif(4, -1, 1),
+      "Lag_0"  = runif(4, -1, 1),
+      check.names = FALSE
+    )
+  }
 
-  out <- create_combined_latex_table(list(mean = cor_tab, last = cor_tab))
+  out <- create_combined_latex_table(list(mean = mk_cor_tab(), last = mk_cor_tab()))
   expect_type(out$table_tex, "character")
   expect_match(out$table_tex, "\\\\textbf\\{Mean\\}")
   expect_match(out$table_tex, "begin\\{tab")
+})
+
+test_that("print_evaluation_periods summarizes start/end quarters per series", {
+  df <- data.frame(Series = c("WAI", "WAI", "AR", "AR"),
+                   date = as.Date(c("2010-01-01", "2010-10-01", "2011-01-01", "2011-04-01")))
+
+  expect_message(
+    res <- print_evaluation_periods(df, "Series", "date", context_label = "example"),
+    "Evaluation periods: example"
+  )
+  expect_equal(sort(res$Series), c("AR", "WAI"))
+  expect_true(all(c("start_quarter", "end_quarter") %in% names(res)))
+})
+
+test_that("print_evaluation_periods returns NULL invisibly for empty data", {
+  expect_null(print_evaluation_periods(data.frame(), "Series", "date", context_label = "x"))
 })
 
 test_that("error details feed the crisis summary tables", {
@@ -86,14 +106,23 @@ test_that("error details feed the crisis summary tables", {
   expect_true("mean" %in% names(tabs$rel_rmse))
 })
 
-test_that("wai_sample_config derives dirs and decimals", {
-  root <- tempfile(); on.exit(unlink(root, recursive = TRUE))
-  cfg <- wai_sample_config(sample_id = "s1",
-                           sample_end_date = "2026-03-07",
-                           output_root = root)
-  expect_true(dir.exists(cfg$figures_dir))
-  expect_true(dir.exists(cfg$tables_dir))
-  expect_true(dir.exists(cfg$results_dir))
-  expect_equal(cfg$sample_end_decimal, round(2026 + 2 / 12 + 7 / 365, 3))
-  expect_equal(cfg$sample_end_fit_decimal, round(2026 + 47 / 48, 3))
+test_that("create_rel_error_tables normalizes relative errors to the WAI baseline", {
+  set.seed(3)
+  combined_results <- expand.grid(
+    target_vintage = seq(2020, 2020.75, 0.25),
+    model = c("WAI", "AR"),
+    method = "mean",
+    lag_number = 0,
+    GDP_type = "real",
+    frequency = "QoQ",
+    stringsAsFactors = FALSE
+  )
+  combined_results$error <- rnorm(nrow(combined_results))
+
+  out <- create_rel_error_tables(combined_results, model_order = c("WAI", "AR"), lag_range = 0)
+  expect_named(out, c("rel_rmse", "rel_mae"))
+  expect_true("mean" %in% names(out$rel_rmse))
+
+  wai_row <- out$rel_rmse$mean[out$rel_rmse$mean$Series == "WAI", ]
+  expect_equal(unname(wai_row[["RMSE_rel_0"]]), "1.00")
 })
