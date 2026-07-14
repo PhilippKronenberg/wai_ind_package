@@ -77,6 +77,20 @@ combined into a single weekly activity factor that is coherent with the
 low-frequency target series (typically quarterly real GDP), from which
 weekly GDP nowcasts are derived.
 }
+\details{
+The factor is identified by fixing its loading on \code{target} to one and
+shrinking the target's measurement-error variance and autocorrelation
+toward zero (informative priors), so the extracted factor closely
+tracks the observed growth rate of \code{target} rather than being merely
+correlated with it. This resolves the usual scale/sign indeterminacy
+of dynamic factor models and yields a directly interpretable
+high-frequency proxy for the target series (see Kronenberg 2026,
+Sect. 2.4). All other series are standardized and enter with
+uninformative priors. Missing and lower-frequency observations are
+estimated as latent states via data augmentation; the factor state
+equation includes stochastic volatility, and measurement errors are
+quasi-differenced to remove serial correlation (see \verb{@references}).
+}
 \examples{
 \donttest{
 data(data_ch_dataset_test)
@@ -91,4 +105,13 @@ fit <- hfdfm(flows = flows, stocks = stocks, target = target,
 fit$nowcast
 }
 
+}
+\references{
+Kronenberg, P. (2026). A high-frequency GDP indicator for
+Switzerland. \emph{Swiss Journal of Economics and Statistics}, 162, 10.
+\doi{10.1186/s41937-026-00157-w}
+
+Eckert, F., Kronenberg, P., Mikosch, H., & Neuwirth, S. (2025).
+Tracking economic activity with alternative high-frequency data.
+\emph{Journal of Applied Econometrics}, 40(3), 270-290.
 }

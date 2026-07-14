@@ -7,6 +7,20 @@
 #' low-frequency target series (typically quarterly real GDP), from which
 #' weekly GDP nowcasts are derived.
 #'
+#' @details
+#' The factor is identified by fixing its loading on `target` to one and
+#' shrinking the target's measurement-error variance and autocorrelation
+#' toward zero (informative priors), so the extracted factor closely
+#' tracks the observed growth rate of `target` rather than being merely
+#' correlated with it. This resolves the usual scale/sign indeterminacy
+#' of dynamic factor models and yields a directly interpretable
+#' high-frequency proxy for the target series (see Kronenberg 2026,
+#' Sect. 2.4). All other series are standardized and enter with
+#' uninformative priors. Missing and lower-frequency observations are
+#' estimated as latent states via data augmentation; the factor state
+#' equation includes stochastic volatility, and measurement errors are
+#' quasi-differenced to remove serial correlation (see `@references`).
+#'
 #' @param flows Named list of `ts` objects treated as flow variables. Must
 #'   contain `target`.
 #' @param stocks Named list of `ts` objects treated as stock variables.
@@ -57,6 +71,15 @@
 #'              length_sample = 50, burn_in = 10)
 #' fit$nowcast
 #' }
+#'
+#' @references
+#' Kronenberg, P. (2026). A high-frequency GDP indicator for
+#' Switzerland. *Swiss Journal of Economics and Statistics*, 162, 10.
+#' \doi{10.1186/s41937-026-00157-w}
+#'
+#' Eckert, F., Kronenberg, P., Mikosch, H., & Neuwirth, S. (2025).
+#' Tracking economic activity with alternative high-frequency data.
+#' *Journal of Applied Econometrics*, 40(3), 270-290.
 #'
 #' @import Matrix
 #' @importFrom stats ts time frequency window var plot.ts
