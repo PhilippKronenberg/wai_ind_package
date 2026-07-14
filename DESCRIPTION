@@ -1,6 +1,6 @@
 Package: waiind
 Type: Package
-Title: Swiss Weekly Activity Index from a Mixed-Frequency Dynamic Factor Model
+Title: Swiss Weekly Activity Index via a Dynamic Factor Model
 Version: 0.0.0.9000
 Authors@R:
     person("Philipp", "Kronenberg", email = "PhilippKronenberg@users.noreply.github.com",
@@ -13,6 +13,8 @@ Description: Estimates a weekly activity index (WAI) for Switzerland and
     GDP vintage handling, out-of-sample forecast evaluation, and the
     tables and plots used in the accompanying analysis.
 License: MIT + file LICENSE
+URL: https://github.com/PhilippKronenberg/wai_ind_package
+BugReports: https://github.com/PhilippKronenberg/wai_ind_package/issues
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
