@@ -13,11 +13,11 @@
 #' @section Getting started:
 #' The package ships the curated indicator datasets [data_ch_dataset] and
 #' [data_ch_dataset_test] plus the real-time GDP vintage database (in
-#' `inst/extdata/`), so a small nowcast can be estimated out of the box —
+#' `inst/extdata/`), so a small nowcast can be estimated out of the box -
 #' see the example in [hfdfm()].
 #'
 #' @references
-#' Eckert, F., Kronenberg, P., Mikosch, H. and Neuwirth, S. —
+#' Eckert, F., Kronenberg, P., Mikosch, H. and Neuwirth, S. -
 #' *Tracking Economic Activity With Alternative High-Frequency Data*
 #' (weekly WWA/WAI methodology; SECO technical note, 2021).
 #' A reference list of the related literature is kept in

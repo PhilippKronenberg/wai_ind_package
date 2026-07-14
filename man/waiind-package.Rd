@@ -20,16 +20,24 @@ repository).
 
 The package ships the curated indicator datasets \link{data_ch_dataset} and
 \link{data_ch_dataset_test} plus the real-time GDP vintage database (in
-\verb{inst/extdata/}), so a small nowcast can be estimated out of the box —
+\verb{inst/extdata/}), so a small nowcast can be estimated out of the box -
 see the example in \code{\link[=hfdfm]{hfdfm()}}.
 }
 
 \references{
-Eckert, F., Kronenberg, P., Mikosch, H. and Neuwirth, S. —
+Eckert, F., Kronenberg, P., Mikosch, H. and Neuwirth, S. -
 \emph{Tracking Economic Activity With Alternative High-Frequency Data}
 (weekly WWA/WAI methodology; SECO technical note, 2021).
 A reference list of the related literature is kept in
 \code{analysis/benchmarks/literature.md} of the source repository.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/PhilippKronenberg/wai_ind_package}
+  \item Report bugs at \url{https://github.com/PhilippKronenberg/wai_ind_package/issues}
+}
+
 }
 \author{
 \strong{Maintainer}: Philipp Kronenberg \email{PhilippKronenberg@users.noreply.github.com}
