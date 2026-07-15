@@ -105,6 +105,36 @@ interactively in R/RStudio.
   actually runs; useful when `devtools` behavior and `R CMD check`
   behavior diverge.
 
+## Pre-commit verification
+
+**Run `R CMD check` before every commit that touches package code**
+(`R/`, `tests/`, `DESCRIPTION`, `NAMESPACE`, `man/`, `vignettes/`) — not
+just before opening a PR. `devtools::check()` is fine for a quick local
+pass, but prefer the real `R CMD build .` then
+`R CMD check --no-manual <tarball>` sequence when in doubt, since
+`devtools::check()` and CI’s `R CMD check` have diverged in this repo
+before (see the `.Rbuildignore` incident below). A clean local check on
+one commit does not guarantee the next commit is still clean — re-run
+it, don’t assume. This is the same discipline as running the test suite
+after every substantive change; treat a passing `R CMD check` as a
+required gate before `git commit`, not an optional nicety saved for
+pre-merge.
+
+- Concrete incident that motivated this rule: PR \#27 (issue \#22, the
+  `claude_edits` → `main` merge) passed every local `R CMD check`
+  throughout the session, but the real GitHub Actions CI failed all 4
+  matrix jobs on `checking contents of 'data' directory ... WARNING` the
+  first time it actually ran — a warning that traced to no file, code
+  path, or example anywhere in the repo (exhaustively verified: fresh
+  clone at the exact failing commit SHA built clean locally with zero
+  warnings). Fixed defensively via `.Rbuildignore` hardening
+  (`^outputs$`, `^fits$`, `^data/benchmarks$`, `^data/dataset$`) and
+  confirmed with a second real CI run before merging. The root cause of
+  *why* it appeared was never conclusively identified — which is exactly
+  the kind of thing more frequent, smaller-diff `R CMD check` runs (one
+  per commit, not one per branch) would catch earlier and make easier to
+  isolate.
+
 ## CI / workflows
 
 - **`.github/workflows/r.yml`** — `R CMD check` on push/PR to `main`.
@@ -246,24 +276,30 @@ it:
     comment** on the issue stating the concrete decisions being made
     (not just intentions) — file-by-file mapping, API changes, what’s
     deferred and why.
-2.  Do the work, verifying it for real (run `R CMD check`, run the test
-    suite, run any modified example/script end-to-end against the
-    installed package — don’t just eyeball the diff).
-3.  **Post a results comment** on the issue summarizing what changed,
+2.  **Branch per issue**: cut a short-lived branch off `main` for the
+    issue (e.g. `issue-23-real-data-check`), not a long-lived shared
+    branch. The original conversion work (issues \#9–#21) was all done
+    on one long-lived branch, `claude_edits`, merged via PR \#27 on
+    2026-07-15 and then deleted — that pattern made sense for one large,
+    sequential conversion project, but isn’t the ongoing convention.
+    Going forward, each issue/feature gets its own branch, opened off an
+    up-to-date `main`.
+3.  Do the work, verifying it for real (run `R CMD check` per
+    “Pre-commit verification” above, run the test suite, run any
+    modified example/script end-to-end against the installed package —
+    don’t just eyeball the diff).
+4.  **Post a results comment** on the issue summarizing what changed,
     citing the commit SHA, and being explicit about anything that turned
     out different from the plan (corrections, surprises, bugs found
     along the way). Don’t hide deviations from the original plan.
-4.  Commit messages end with `Closes #N` and
+5.  Commit messages end with `Closes #N` and
     `Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>`.
-5.  **Current branch is `claude_edits`, not `main`, and no PR has been
-    opened yet.** Because of this, `Closes #N` commit messages have
-    *not* auto-closed issues \#9–#19 even though the corresponding work
-    is done — GitHub only closes on merge to the default branch. Don’t
-    be misled by the issue tracker showing them all as still “open”;
-    check the commit history / issue comments for actual status, and
-    open a PR (with the user’s explicit go-ahead) when ready to land
-    this on `main`.
-6.  When work surfaces a judgment call with real trade-offs (not a
+6.  Open a PR into `main` (with the user’s explicit go-ahead), confirm
+    CI is actually green on the PR (not just local checks — see the
+    `.Rbuildignore` incident above), then merge and delete the branch.
+    Smaller, more frequent PRs make CI failures much easier to isolate
+    than one large multi-week diff.
+7.  When work surfaces a judgment call with real trade-offs (not a
     mechanical fix), use `AskUserQuestion` rather than deciding
     unilaterally — this has been the expected pattern throughout
     (e.g. the r-pkgs.org audit’s optional/discretionary points).
