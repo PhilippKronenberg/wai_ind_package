@@ -14,3 +14,7 @@
 ^\.vscode$
 ^docs$
 ^_pkgdown\.yml$
+^outputs$
+^fits$
+^data/benchmarks$
+^data/dataset$
