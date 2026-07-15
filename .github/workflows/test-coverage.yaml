@@ -39,16 +39,14 @@ jobs:
         shell: Rscript {0}
 
       # Requires a CODECOV_TOKEN secret (from codecov.io, linked to this
-      # repo) to actually upload; until that's added this step no-ops
-      # without failing the workflow.
-      - uses: codecov/codecov-action@v4
+      # repo) to actually upload.
+      - uses: codecov/codecov-action@v5
         with:
           fail_ci_if_error: false
-          file: ./cobertura.xml
+          files: ./cobertura.xml
           plugins: noop
           disable_search: true
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Show testthat output
         if: always()
