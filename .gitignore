@@ -47,3 +47,16 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# Generated model outputs and result caches (reproducible via the
+# analysis pipeline; kept out of the repo per issue #11)
+analysis/out/
+analysis/Rda/results_*
+analysis/Rda/fit_*
+analysis/Rda/factor_vintages*
+analysis/Rda/insample*
+fits/
+outputs/
+
+# Benchmark literature PDFs (see analysis/benchmarks/literature.md)
+analysis/benchmarks/*.pdf
