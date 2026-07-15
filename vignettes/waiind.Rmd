@@ -1,0 +1,170 @@
+---
+title: "waiind: A High-Frequency GDP Indicator for Switzerland"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{waiind: A High-Frequency GDP Indicator for Switzerland}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+```{r setup}
+library(waiind)
+```
+
+## What is the WAI?
+
+The Weekly Activity Index (WAI) is a high-frequency GDP indicator for
+Switzerland: a single dynamic factor, extracted from a Bayesian
+mixed-frequency dynamic factor model, that is directly interpretable as
+the week-on-week growth rate of Swiss real GDP. It is built to combine
+two kinds of data:
+
+- **Conventional macroeconomic indicators** — surveys, prices, trade,
+  purchasing manager indices — published monthly or quarterly, and
+- **Alternative high-frequency data** — payment and transaction volumes,
+  mobility indicators, search-trend indices, traffic and flight counts —
+  available daily or weekly, often with very short histories and
+  irregular publication lags.
+
+Unlike unsupervised approaches that extract a factor from high-frequency
+data alone (e.g. principal components), the WAI is *supervised*: an
+identification restriction anchors the factor to observed GDP growth, so
+it is a direct high-frequency proxy for GDP rather than a generic
+activity index that merely correlates with it.
+
+The methodology, full empirical results, and a real-time forecast
+evaluation are described in Kronenberg (2026); see `?waiind` for the
+full citation and the underlying multi-factor framework of Eckert,
+Kronenberg, Mikosch & Neuwirth (2025). This vignette covers the
+package's user-facing workflow only.
+
+## The model, briefly
+
+`hfdfm()` estimates a single latent weekly factor $f_t$ whose
+(distributed-lag, temporally aggregated) measurement equation links it
+to every input series, and whose autoregressive state equation includes
+**stochastic volatility** so the variance of common shocks can rise
+during crises instead of being smoothed away. Three features make this
+work with real-world mixed-frequency data:
+
+- **Data augmentation** treats missing and lower-frequency observations
+  as latent states, so a series that starts in 2020 and updates weekly,
+  another that starts in 1990 and updates monthly, and quarterly GDP
+  itself can all enter the same state-space model.
+- **Stochastic volatility** in the factor state equation lets abrupt
+  swings (e.g. the COVID-19 pandemic) show up as genuinely higher
+  volatility rather than being averaged away.
+- **Quasi-differencing** of the measurement equation removes serial
+  correlation in each series' idiosyncratic errors, so persistent
+  indicator-specific noise doesn't get misattributed to the common
+  factor.
+
+Identification fixes the factor's loading on the target series (GDP) to
+one and shrinks its measurement error toward zero, so the factor tracks
+GDP growth closely by construction — see `?hfdfm` for the details and
+references, and `vignette("waiind")`'s "Real-time GDP vintages" section
+below for how the target series itself is constructed for live use.
+
+## A minimal worked example
+
+The package ships a curated, model-ready dataset,
+`data_ch_dataset_test`, so a small demonstration model can be estimated
+without any external data. Real analyses use the full indicator set and
+a much longer chain (the accompanying paper uses `length_sample = 5000`
+after a burn-in of 1000); here we use a tiny subset and a short chain
+purely so this vignette builds quickly.
+
+```{r fit-model}
+data(data_ch_dataset_test)
+
+target <- "ch.seco.gdp.real.gdp.ssa"
+flows <- lapply(
+  data_ch_dataset_test$flows[c(target, "SWISSMI", "traffic_PW")],
+  stats::window, start = 2018
+)
+stocks <- lapply(data_ch_dataset_test$stocks[1:2], stats::window, start = 2018)
+
+set.seed(1)
+fit <- hfdfm(
+  flows = flows, stocks = stocks, target = target,
+  length_sample = 200, burn_in = 50
+)
+
+class(fit)
+names(fit)
+```
+
+`fit$factor` is the annualized weekly growth rate implied by the model —
+the WAI itself — and `fit$nowcast` is that same information aggregated
+back up to the target's own (here quarterly) frequency:
+
+```{r plot-factor, fig.width = 6, fig.height = 4}
+plot(fit$factor, ylab = "WAI (annualized %, weekly)", xlab = NULL)
+```
+
+```{r nowcast}
+fit$nowcast
+```
+
+`fit$index` gives the cumulated activity level (rebased to 100 at the
+start of the estimation window), and `fit$pars` holds the posterior
+means of the model parameters, including the factor loadings
+(`fit$pars$lambda`) — the target series' loading is fixed at 1 by
+construction:
+
+```{r loadings}
+fit$pars$lambda[which(fit$inventory$key == target)]
+```
+
+## Real-time GDP vintages
+
+The full `data_ch_dataset` deliberately ships *without* a GDP target
+series: real analyses inject GDP at runtime from the real-time vintage
+database, which ships with the package and needs no configuration:
+
+```{r vintages}
+vintages <- get_real_time_gdp_vintages("quarterly")
+dim(vintages)
+```
+
+`cut_data_real_time()` truncates a dataset to what would have been
+observable at a given date, substituting the appropriate GDP vintage for
+the target series — the building block for the paper's real-time
+out-of-sample evaluation:
+
+```{r cut-real-time}
+dat_rt <- cut_data_real_time(data_ch_dataset_test, current_date = 2024.5,
+                             GDP_gr_vintages = vintages)
+tail(time(dat_rt$flows[[target]]))
+```
+
+## Beyond this vignette
+
+The functions used in the accompanying analysis pipeline are exported
+but need either the full (non-shipped) indicator set or previously
+saved model fits, so they aren't run here:
+
+```{r pipeline, eval = FALSE}
+# Estimate the full WAI and optionally save the fit:
+fit_full <- run_wai_adj(
+  flows = dat$flows, stocks = dat$stocks, target = target,
+  date = 2024.5, dataset_used = "full_RT", output_dir = "fits/updated"
+)
+
+# AR(1) benchmark, and the Diebold-Mariano test used to compare them:
+fit_ar <- run_ar(flows = dat$flows, stocks = dat$stocks, target = target,
+                 date = 2024.5, dataset_used = "full_RT")
+dm_test_modified(errors_wai, errors_ar)
+```
+
+For the in-sample and out-of-sample evaluation tables and plots shown in
+the paper (correlation heatmaps, relative RMSE/MAE tables against the
+SECO-WEA, F-CURVE, SECO-SEC, SNB-BCI and KOF-BARO benchmarks), see the
+`analysis/5_plots/` scripts in the package's source repository, which
+call `get_combined_cor_table()`, `get_insample_fit_table()`,
+`create_rel_error_tables()` and related functions documented under
+`?get_combined_cor_table`.

@@ -1,0 +1,167 @@
+# Date and vintage aggregation utilities shared by the analytics workflow.
+
+#' Convert dates to decimal years (day-of-year convention)
+#'
+#' Converts dates to decimal years as `year + (day_of_year - 1)/365`,
+#' the convention used throughout the WAI vintage handling. Unlike
+#' `lubridate::decimal_date()`, this does not account for leap years.
+#'
+#' @param x `Date` vector (or coercible).
+#'
+#' @return Numeric vector of decimal years.
+#'
+#' @examples
+#' decimal_date_local(as.Date("2020-03-07"))
+#'
+#' @export
+decimal_date_local <- function(x) {
+  x <- as.Date(x)
+  as.numeric(format(x, "%Y")) +
+    (as.numeric(format(x, "%j")) - 1) / 365
+}
+
+
+#' Flag dates falling into the crisis periods
+#'
+#' Marks dates inside the financial crisis (2008-07-07 to 2009-09-28) or
+#' the Covid-19 crisis (2020-01-01 to 2021-12-28).
+#'
+#' @param date_vec `Date` vector (or coercible).
+#'
+#' @return Logical vector.
+#'
+#' @examples
+#' is_crisis_period(as.Date(c("2015-01-01", "2020-06-01")))
+#'
+#' @export
+is_crisis_period <- function(date_vec) {
+  crisis_dates <- data.frame(
+    start = as.Date(c("2008-07-07", "2020-01-01")),
+    end = as.Date(c("2009-09-28", "2021-12-28"))
+  )
+  vapply(as.Date(date_vec), function(d) any(d >= crisis_dates$start & d <= crisis_dates$end), logical(1))
+}
+
+
+#' Aggregate a daily series to the 48-week grid
+#'
+#' Averages a daily `zoo` series into the project's 48-periods-per-year
+#' weekly grid.
+#'
+#' @param x Daily series (`zoo` indexed by `Date`).
+#'
+#' @return A `ts` with frequency 48; weeks without observations are `NA`.
+#'
+#' @importFrom stats time as.ts aggregate
+#' @examples
+#' daily <- zoo::zoo(rnorm(120),
+#'                   order.by = seq(as.Date("2024-01-01"), by = "day", length.out = 120))
+#' weekly <- daily2weekly(daily)
+#' stats::frequency(weekly)
+#' @export
+daily2weekly <- function(x){
+
+  idx <- plyr::round_any(x = as.numeric(format(time(x), "%Y")) +
+                           (as.numeric(format(time(x), "%m"))-1)/12 +
+                           as.numeric(format(time(x), "%d"))/365,
+                         accuracy = 1/48,
+                         f = floor)
+
+  ts_weekly <- as.ts(aggregate(x = x,
+                               by = idx,
+                               FUN = mean,
+                               na.rm=TRUE))
+  ts_weekly[is.nan(ts_weekly)] <- NA
+  ts_weekly
+
+}
+
+
+#' Aggregate a predictor data frame to quarterly frequency
+#'
+#' Aggregates a `time`/`value` data frame to quarters by mean, by the
+#' cut-off month, or by the last observation of the cut-off month.
+#'
+#' **Warning:** this function dispatches on the *name* of the object
+#' passed as `df`: if the deparsed argument name contains `"AR"`, the
+#' data frame is returned with only a `yearqtr` column added. This
+#' legacy behavior is kept for compatibility with the analysis scripts;
+#' avoid renaming objects passed to it.
+#'
+#' @param df Data frame with `time` (Date) and `value` columns.
+#' @param cut_off_month_pos Integer position of the cut-off month within
+#'   the quarter (used by methods `"last_month"` and `"last"`).
+#' @param method One of `"last_month"`, `"mean"`, `"last"`.
+#'
+#' @return A quarterly data frame (columns depend on `method`).
+#'
+#' @importFrom dplyr mutate group_by filter summarise ungroup rename slice_max select
+#' @importFrom zoo as.yearqtr
+#' @importFrom lubridate floor_date
+#' @examples
+#' df <- data.frame(time = seq(as.Date("2023-01-01"), by = "month", length.out = 12),
+#'                  value = rnorm(12))
+#' aggregate_predictor_to_quarterly(df, cut_off_month_pos = 1, method = "mean")
+#' @export
+aggregate_predictor_to_quarterly <- function(df, cut_off_month_pos = NULL, method = "cut_off") {
+  df_name <- deparse(substitute(df))
+
+  # If name contains "AR", return df with time converted to yearqtr
+  if (grepl("AR", df_name)) {
+    return(
+      result <- df %>%
+        mutate(yearqtr = as.yearqtr(time))
+    )
+  }
+  if (method == "last_month") {
+    result <- df %>%
+    mutate(month = as.numeric(format(time, "%m")),
+           yearqtr = as.yearqtr(time)) %>%
+    group_by(yearqtr) %>%
+      filter(month %% 3 == (cut_off_month_pos %% 3)) %>%
+    summarise(value = mean(value, na.rm = TRUE), .groups = "drop") %>%
+    ungroup()
+
+  } else if (method == "mean") {
+    result <- df %>%
+      mutate(quarter = floor_date(time, unit = "quarter")) %>%
+      group_by(quarter) %>%
+      summarise(value = mean(value, na.rm = TRUE), .groups = "drop") %>%
+      ungroup() %>%
+      rename(time = quarter) %>%
+    mutate(yearqtr = as.yearqtr(time))
+
+  } else if (method == "last") {
+    result <- df %>%
+      mutate(month = as.numeric(format(time, "%m")),
+             yearqtr = as.yearqtr(time)) %>%
+      group_by(yearqtr) %>%
+      filter(month %% 3 == (cut_off_month_pos %% 3)) %>%
+      slice_max(order_by = time, with_ties = FALSE) %>%  # Select the latest date per yearqtr
+      ungroup() %>%
+      select(yearqtr, value)
+  } else {
+    stop("Unknown method. Please choose 'cut_off', 'mean', or 'last'.")
+  }
+
+  return(result)
+}
+
+
+#' First target vintage after a prediction vintage
+#'
+#' @param pred_vintage Numeric decimal date of the prediction vintage.
+#' @param target_vintages Numeric vector of available target vintages.
+#'
+#' @return The smallest target vintage strictly after `pred_vintage`, or
+#'   `NA` if none exists.
+#'
+#' @examples
+#' get_next_target_vintage(2020.5, c(2020.25, 2020.75, 2021))
+#'
+#' @export
+get_next_target_vintage <- function(pred_vintage, target_vintages) {
+  valid_targets <- target_vintages[target_vintages > pred_vintage]
+  if (length(valid_targets) == 0) return(NA_real_)
+  min(valid_targets)
+}
