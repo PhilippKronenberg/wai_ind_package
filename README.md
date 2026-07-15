@@ -1,6 +1,9 @@
 # waiind — Swiss Weekly Activity Index
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/PhilippKronenberg/wai_ind_package/actions/workflows/r.yml/badge.svg)](https://github.com/PhilippKronenberg/wai_ind_package/actions/workflows/r.yml)
+[![test-coverage](https://github.com/PhilippKronenberg/wai_ind_package/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/PhilippKronenberg/wai_ind_package/actions/workflows/test-coverage.yaml)
+[![Codecov test coverage](https://codecov.io/gh/PhilippKronenberg/wai_ind_package/branch/main/graph/badge.svg)](https://app.codecov.io/gh/PhilippKronenberg/wai_ind_package)
 <!-- badges: end -->
 
 `waiind` estimates a **weekly activity index (WAI) for Switzerland** and
@@ -31,6 +34,11 @@ remotes::install_github("PhilippKronenberg/wai_ind_package")
 The package requires R >= 4.1.
 
 ## Getting started
+
+For a fuller walkthrough of the model (data augmentation, stochastic
+volatility, the GDP-identification restriction) with a runnable example,
+see `vignette("waiind")` — also browsable on the
+[package website](https://philippkronenberg.github.io/wai_ind_package/articles/waiind.html).
 
 The curated indicator datasets ship with the package. A small (fast,
 demonstration-sized) nowcast:
@@ -94,20 +102,37 @@ written to a git-ignored `fits/` directory):
 The full `data_ch_dataset` deliberately ships *without* the GDP target
 series — the workflow injects it at runtime from the real-time vintages.
 
+## Documentation
+
+Full function reference, the vignette, and the change log are published
+at **<https://philippkronenberg.github.io/wai_ind_package/>**.
+
 ## Development
 
 ``` r
 devtools::document()   # regenerate NAMESPACE and man/ from roxygen
-devtools::test()       # run the testthat suite (~25 s)
+devtools::test()       # run the testthat suite (149 assertions, ~20 s)
 devtools::check()      # R CMD check (CI runs this on push/PR to main)
 devtools::load_all()   # interactive development
+pkgdown::build_site()  # preview the documentation website locally
 ```
 
 ## References
 
-The methodology follows Eckert, Kronenberg, Mikosch and Neuwirth's
-weekly activity index work (SECO WWA technical note, 2021). A reference
-list of the related literature is kept in
+The methodology and full empirical results are described in:
+
+> Kronenberg, P. (2026). A high-frequency GDP indicator for
+> Switzerland. *Swiss Journal of Economics and Statistics*, 162, 10.
+> <https://doi.org/10.1186/s41937-026-00157-w>
+
+which extends the mixed-frequency dynamic factor model of:
+
+> Eckert, F., Kronenberg, P., Mikosch, H., & Neuwirth, S. (2025).
+> Tracking economic activity with alternative high-frequency data.
+> *Journal of Applied Econometrics*, 40(3), 270-290.
+
+A reference list of the related business-cycle-indicator literature is
+kept in
 [`analysis/benchmarks/literature.md`](analysis/benchmarks/literature.md).
 
 ## License
