@@ -88,7 +88,29 @@ Run from the package root using `Rscript -e '<command>'` or interactively in R/R
 - **`.github/workflows/test-coverage.yaml`** — runs covr and uploads to Codecov on push/PR to `main`. **Needs a `CODECOV_TOKEN` repo secret** (sign in to codecov.io with GitHub, authorize this repo, add the secret) to actually upload; until then it runs but the upload step no-ops without failing.
 - **`.github/workflows/pkgdown.yaml`** — builds the pkgdown site and deploys to the `gh-pages` branch on push to `main`. **Needs GitHub Pages enabled once** (Settings → Pages → Branch: `gh-pages`) after the first successful post-merge run creates that branch.
 - **`.github/workflows/claude-code.yml`** — `@claude` mentions in issue/PR comments and reviews, or manual `workflow_dispatch`.
-- **`.github/workflows/claude-code-review.yml`** — automatic Claude review on every PR open/update (consumes API/subscription quota per PR; salvaged from an orphaned branch, has commented-out filters for paths/authors if it ever needs restricting).
+- **`.github/workflows/claude-code-review.yml`** — automatic Claude review on every PR open/update (consumes API/subscription quota per PR; salvaged from an orphaned branch, has commented-out filters for paths/authors if it ever needs restricting). **Currently disabled** to conserve Claude usage: its `pull_request` trigger is commented out, leaving only `workflow_dispatch`. Restore by uncommenting that block.
+
+## Working efficiently (token/compute budget)
+
+Claude usage quota has been tight. Until the user says otherwise, follow the active workflow below — it trims some of the fuller practices documented elsewhere in this file (Pre-commit verification, Issue-tracking workflow), which remain the target once budget isn't a constraint.
+
+### Active workflow (use this now)
+
+- `claude-code-review.yml`'s automatic per-push review is disabled (see CI / workflows above) — no need to minimize PR pushes for its sake specifically.
+- Don't spawn subagents for tasks that fit in a few direct `Read`/`Grep`/`Glob` calls.
+- Batch related file changes into one edit pass before running `R CMD check`/tests, rather than checking after every micro-change; one check right before committing still satisfies "Pre-commit verification" above.
+- Don't re-read files already seen in the conversation; trust prior tool output.
+- Don't include `@claude` in commit messages, PR bodies, or comments unless intentionally triggering `claude-code.yml`.
+- Prefer `devtools::check()` / `testthat::test_file()` locally over pushing and waiting on CI to iterate; push once changes are believed correct, since `r.yml`'s 4-job matrix (ubuntu ×2, macos, windows) runs on every push/PR to `main`.
+
+### Optimal workflow (restore once budget is no longer a constraint)
+
+<!--
+- Re-enable claude-code-review.yml's `pull_request` trigger.
+- Use subagents freely for multi-angle research; don't economize on exploration.
+- Follow "Pre-commit verification" literally: full `R CMD build .` + `R CMD check --no-manual` before every commit, not just once before pushing.
+- Push early and often; let CI and the automatic review catch problems per-commit rather than batching changes.
+-->
 
 ## Package architecture: conventions that aren't obvious from the code alone
 
