@@ -3,7 +3,7 @@ pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   waiind: waiind.html
-last_built: 2026-07-15T14:11Z
+last_built: 2026-07-16T14:44Z
 urls:
   reference: https://philippkronenberg.github.io/wai_ind_package/reference
   article: https://philippkronenberg.github.io/wai_ind_package/articles

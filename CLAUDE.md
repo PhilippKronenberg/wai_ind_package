@@ -157,7 +157,40 @@ pre-merge.
 - **`.github/workflows/claude-code-review.yml`** — automatic Claude
   review on every PR open/update (consumes API/subscription quota per
   PR; salvaged from an orphaned branch, has commented-out filters for
-  paths/authors if it ever needs restricting).
+  paths/authors if it ever needs restricting). **Currently disabled** to
+  conserve Claude usage: its `pull_request` trigger is commented out,
+  leaving only `workflow_dispatch`. Restore by uncommenting that block.
+
+## Working efficiently (token/compute budget)
+
+Claude usage quota has been tight. Until the user says otherwise, follow
+the active workflow below — it trims some of the fuller practices
+documented elsewhere in this file (Pre-commit verification,
+Issue-tracking workflow), which remain the target once budget isn’t a
+constraint.
+
+### Active workflow (use this now)
+
+- `claude-code-review.yml`’s automatic per-push review is disabled (see
+  CI / workflows above) — no need to minimize PR pushes for its sake
+  specifically.
+- Don’t spawn subagents for tasks that fit in a few direct
+  `Read`/`Grep`/`Glob` calls.
+- Batch related file changes into one edit pass before running
+  `R CMD check`/tests, rather than checking after every micro-change;
+  one check right before committing still satisfies “Pre-commit
+  verification” above.
+- Don’t re-read files already seen in the conversation; trust prior tool
+  output.
+- Don’t include `@claude` in commit messages, PR bodies, or comments
+  unless intentionally triggering `claude-code.yml`.
+- Prefer `devtools::check()` /
+  [`testthat::test_file()`](https://testthat.r-lib.org/reference/test_file.html)
+  locally over pushing and waiting on CI to iterate; push once changes
+  are believed correct, since `r.yml`’s 4-job matrix (ubuntu ×2, macos,
+  windows) runs on every push/PR to `main`.
+
+### Optimal workflow (restore once budget is no longer a constraint)
 
 ## Package architecture: conventions that aren’t obvious from the code alone
 

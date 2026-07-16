@@ -152,8 +152,31 @@
 <li>
 <strong><code>.github/workflows/claude-code.yml</code></strong> — <code>@claude</code> mentions in issue/PR comments and reviews, or manual <code>workflow_dispatch</code>.</li>
 <li>
-<strong><code>.github/workflows/claude-code-review.yml</code></strong> — automatic Claude review on every PR open/update (consumes API/subscription quota per PR; salvaged from an orphaned branch, has commented-out filters for paths/authors if it ever needs restricting).</li>
+<strong><code>.github/workflows/claude-code-review.yml</code></strong> — automatic Claude review on every PR open/update (consumes API/subscription quota per PR; salvaged from an orphaned branch, has commented-out filters for paths/authors if it ever needs restricting). <strong>Currently disabled</strong> to conserve Claude usage: its <code>pull_request</code> trigger is commented out, leaving only <code>workflow_dispatch</code>. Restore by uncommenting that block.</li>
 </ul></div>
+<div class="section level2">
+<h2 id="working-efficiently-tokencompute-budget">Working efficiently (token/compute budget)<a class="anchor" aria-label="anchor" href="#working-efficiently-tokencompute-budget"></a></h2>
+<p>Claude usage quota has been tight. Until the user says otherwise, follow the active workflow below — it trims some of the fuller practices documented elsewhere in this file (Pre-commit verification, Issue-tracking workflow), which remain the target once budget isn’t a constraint.</p>
+<div class="section level3">
+<h3 id="active-workflow-use-this-now">Active workflow (use this now)<a class="anchor" aria-label="anchor" href="#active-workflow-use-this-now"></a></h3>
+<ul><li>
+<code>claude-code-review.yml</code>’s automatic per-push review is disabled (see CI / workflows above) — no need to minimize PR pushes for its sake specifically.</li>
+<li>Don’t spawn subagents for tasks that fit in a few direct <code>Read</code>/<code>Grep</code>/<code>Glob</code> calls.</li>
+<li>Batch related file changes into one edit pass before running <code>R CMD check</code>/tests, rather than checking after every micro-change; one check right before committing still satisfies “Pre-commit verification” above.</li>
+<li>Don’t re-read files already seen in the conversation; trust prior tool output.</li>
+<li>Don’t include <code>@claude</code> in commit messages, PR bodies, or comments unless intentionally triggering <code>claude-code.yml</code>.</li>
+<li>Prefer <code>devtools::check()</code> / <code><a href="https://testthat.r-lib.org/reference/test_file.html" class="external-link">testthat::test_file()</a></code> locally over pushing and waiting on CI to iterate; push once changes are believed correct, since <code>r.yml</code>’s 4-job matrix (ubuntu ×2, macos, windows) runs on every push/PR to <code>main</code>.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="optimal-workflow-restore-once-budget-is-no-longer-a-constraint">Optimal workflow (restore once budget is no longer a constraint)<a class="anchor" aria-label="anchor" href="#optimal-workflow-restore-once-budget-is-no-longer-a-constraint"></a></h3>
+<!--
+- Re-enable claude-code-review.yml's `pull_request` trigger.
+- Use subagents freely for multi-angle research; don't economize on exploration.
+- Follow "Pre-commit verification" literally: full `R CMD build .` + `R CMD check --no-manual` before every commit, not just once before pushing.
+- Push early and often; let CI and the automatic review catch problems per-commit rather than batching changes.
+-->
+</div>
+</div>
 <div class="section level2">
 <h2 id="package-architecture-conventions-that-arent-obvious-from-the-code-alone">Package architecture: conventions that aren’t obvious from the code alone<a class="anchor" aria-label="anchor" href="#package-architecture-conventions-that-arent-obvious-from-the-code-alone"></a></h2>
 <ul><li>
