@@ -43,7 +43,6 @@ Imports:
     Metrics,
     plyr,
     purrr,
-    readxl,
     rlang,
     scales,
     stats,

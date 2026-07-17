@@ -6,26 +6,31 @@
 \usage{
 get_real_time_gdp_vintages(
   output_type,
-  file_path = system.file("extdata", "realtime_database_GDP.xlsx", package = "waiind")
+  gdp_file_path = system.file("extdata", "realtime_gdp.csv", package = "waiind"),
+  gdp_cssa_file_path = system.file("extdata", "realtime_gdp_cssa.csv", package =
+    "waiind")
 )
 }
 \arguments{
 \item{output_type}{Character, \code{"quarterly"} for quarter-on-quarter log
 differences or \code{"annual"} for year-on-year growth rates.}
 
-\item{file_path}{Path to the vintage database spreadsheet. Defaults to
+\item{gdp_file_path}{Path to the pre-2018Q3 vintage CSV. Defaults to
 the file shipped with the package.}
+
+\item{gdp_cssa_file_path}{Path to the 2018Q3-onward vintage CSV.
+Defaults to the file shipped with the package.}
 }
 \value{
 A data frame with a \code{time} column (Date, quarter start) and
 one numeric column per vintage.
 }
 \description{
-Reads the Swiss real-time GDP vintage spreadsheet and returns a table
+Reads the Swiss real-time GDP vintage database and returns a table
 of GDP growth vintages: one column per publication vintage (named by
 its decimal publication date, rounded to a 48th of a year), one row
-per quarter. Pre-2018Q3 vintages are taken from the \code{gdp} sheet,
-later ones from the \code{gdp_cssa} sheet.
+per quarter. Pre-2018Q3 vintages are taken from \code{gdp_file_path},
+later ones from \code{gdp_cssa_file_path}.
 }
 \examples{
 \donttest{

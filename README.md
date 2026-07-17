@@ -97,7 +97,7 @@ written to a git-ignored `fits/` directory):
 |---|---|
 | `data_ch_dataset` | Harmonized Swiss indicator dataset (flows/stocks lists of `ts`) |
 | `data_ch_dataset_test` | Test variant, includes the GDP target series |
-| `inst/extdata/realtime_database_GDP.xlsx` | Real-time GDP vintage database (read by `get_real_time_gdp_vintages()`) |
+| `inst/extdata/realtime_gdp.csv`, `realtime_gdp_cssa.csv` | Real-time GDP vintage database (read by `get_real_time_gdp_vintages()`) |
 
 The full `data_ch_dataset` deliberately ships *without* the GDP target
 series — the workflow injects it at runtime from the real-time vintages.

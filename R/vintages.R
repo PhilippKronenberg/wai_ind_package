@@ -1,15 +1,17 @@
 #' Read the real-time GDP vintage database
 #'
-#' Reads the Swiss real-time GDP vintage spreadsheet and returns a table
+#' Reads the Swiss real-time GDP vintage database and returns a table
 #' of GDP growth vintages: one column per publication vintage (named by
 #' its decimal publication date, rounded to a 48th of a year), one row
-#' per quarter. Pre-2018Q3 vintages are taken from the `gdp` sheet,
-#' later ones from the `gdp_cssa` sheet.
+#' per quarter. Pre-2018Q3 vintages are taken from `gdp_file_path`,
+#' later ones from `gdp_cssa_file_path`.
 #'
 #' @param output_type Character, `"quarterly"` for quarter-on-quarter log
 #'   differences or `"annual"` for year-on-year growth rates.
-#' @param file_path Path to the vintage database spreadsheet. Defaults to
+#' @param gdp_file_path Path to the pre-2018Q3 vintage CSV. Defaults to
 #'   the file shipped with the package.
+#' @param gdp_cssa_file_path Path to the 2018Q3-onward vintage CSV.
+#'   Defaults to the file shipped with the package.
 #'
 #' @return A data frame with a `time` column (Date, quarter start) and
 #'   one numeric column per vintage.
@@ -22,13 +24,16 @@
 #'
 #' @export
 get_real_time_gdp_vintages <- function(output_type,
-                                       file_path = system.file("extdata",
-                                                               "realtime_database_GDP.xlsx",
-                                                               package = "waiind")){
+                                       gdp_file_path = system.file("extdata",
+                                                                   "realtime_gdp.csv",
+                                                                   package = "waiind"),
+                                       gdp_cssa_file_path = system.file("extdata",
+                                                                        "realtime_gdp_cssa.csv",
+                                                                        package = "waiind")){
 
   # Usage
-  gdp_cssa_info <- read_sheet_info("gdp_cssa", file_path)
-  gdp_info <- read_sheet_info("gdp", file_path)
+  gdp_cssa_info <- read_sheet_info(gdp_cssa_file_path, has_dates = FALSE)
+  gdp_info <- read_sheet_info(gdp_file_path, has_dates = TRUE)
 
   # Step 1: Find position of "2018q3"
   pos_2018q3 <- which(names(gdp_cssa_info$data) == "2018q3")
@@ -83,24 +88,34 @@ get_real_time_gdp_vintages <- function(output_type,
 }
 
 
-#' Read one sheet of the vintage database
+#' Read one sheet of the vintage database from its CSV export
 #'
+#' Each CSV mirrors the layout of the original spreadsheet sheet it was
+#' exported from: an optional leading row of publication dates (one blank
+#' placeholder for the `time` column, then one date per vintage column),
+#' a row of column titles, then the data rows. `gdp_cssa`'s dates row is
+#' omitted since it's never used downstream (only `gdp`'s dates feed
+#' [get_real_time_gdp_vintages()]'s vintage-name calculation).
+#'
+#' @param file_path Path to the CSV file.
+#' @param has_dates Logical, whether the file has a leading dates row.
 #' @noRd
-#' @importFrom readxl read_excel cell_rows
-read_sheet_info <- function(sheet_name, file_path) {
-  # Read column titles from row 11
-  column_titles <- read_excel(file_path, sheet = sheet_name, range = cell_rows(11), col_names = FALSE)
-  column_titles <- as.character(unlist(column_titles))
+read_sheet_info <- function(file_path, has_dates) {
+  raw <- utils::read.csv(file_path, header = FALSE, colClasses = "character",
+                          check.names = FALSE)
 
-  # Read dates as numeric (Excel serial date numbers)
-  dates_raw <- read_excel(file_path, sheet = sheet_name, range = cell_rows(10), col_names = FALSE, col_types = "numeric")
-  dates_numeric <- as.numeric(unlist(dates_raw))
+  if (has_dates) {
+    dates_vector <- as.character(raw[1, -1])
+    titles_row <- 2
+  } else {
+    dates_vector <- NULL
+    titles_row <- 1
+  }
 
-  # Convert Excel serial date numbers to actual dates
-  dates_vector <- format(as.Date(dates_numeric, origin = "1899-12-30"), "%d.%m.%Y")
-
-  # Read the data starting from row 12
-  data <- read_excel(file_path, sheet = sheet_name, skip = 11, col_names = column_titles)
+  column_titles <- as.character(raw[titles_row, ])
+  data <- raw[(titles_row + 1):nrow(raw), , drop = FALSE]
+  names(data) <- column_titles
+  data[-1] <- lapply(data[-1], function(x) suppressWarnings(as.numeric(x)))
 
   list(
     column_titles = column_titles,
