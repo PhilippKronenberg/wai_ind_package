@@ -151,6 +151,11 @@ This project has been developed issue-by-issue on GitHub (`gh issue` / `gh api`)
 7. Open a PR into `main` (with the user's explicit go-ahead), confirm CI is actually green on the PR (not just local checks — see the `.Rbuildignore` incident above), then merge and delete the branch. Smaller, more frequent PRs make CI failures much easier to isolate than one large multi-week diff.
 8. When work surfaces a judgment call with real trade-offs (not a mechanical fix), use `AskUserQuestion` rather than deciding unilaterally — this has been the expected pattern throughout (e.g. the r-pkgs.org audit's optional/discretionary points).
 
+## Git safety notes
+
+- **`git rm --cached` doesn't protect files across branch switches or pulls.** "Files stay on disk, just untracked" only holds for whoever ran the command directly. Anyone (including a later session) who checks out a different branch, or fast-forwards across the exact commit where a path went from tracked to untracked, will have `git checkout`'s tree-diff logic delete those files from the working copy — it has no memory that the removal was `--cached`-only. Recoverable via `git archive <last-good-commit> -- <path>` piped to `tar -x` as long as the old commit hasn't been gc'd yet, but better to expect it in advance. Bit us with `fits/`/`outputs/` (#26, during a post-merge branch switch) — worth remembering if another gitignored-but-still-tracked directory turns up later.
+- **A history rewrite (`git filter-repo` or similar) isn't actually done until every backup ref is gone.** A backup tag/branch, `ORIG_HEAD` (auto-created by `git reset --hard`), or a stale remote-tracking branch for an already-deleted PR branch (left behind by a `git fetch` without `--prune`) all pin the *entire* old history reachable — `git gc` and GitHub's own repack can't reclaim anything while any of them exist, and a fresh clone still pulls the old blobs via any lingering tag. After a rewrite: delete the backup tag once verified, `git update-ref -d ORIG_HEAD`, and `git fetch --prune` before expecting `git gc --prune=now` to actually shrink anything (#26).
+
 ## Tooling
 
 - Use Context7 to check up-to-date docs when implementing new libraries/frameworks or adding features using them.
