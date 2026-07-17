@@ -230,6 +230,13 @@
 <li>When work surfaces a judgment call with real trade-offs (not a mechanical fix), use <code>AskUserQuestion</code> rather than deciding unilaterally — this has been the expected pattern throughout (e.g. the r-pkgs.org audit’s optional/discretionary points).</li>
 </ol></div>
 <div class="section level2">
+<h2 id="git-safety-notes">Git safety notes<a class="anchor" aria-label="anchor" href="#git-safety-notes"></a></h2>
+<ul><li>
+<strong><code>git rm --cached</code> doesn’t protect files across branch switches or pulls.</strong> “Files stay on disk, just untracked” only holds for whoever ran the command directly. Anyone (including a later session) who checks out a different branch, or fast-forwards across the exact commit where a path went from tracked to untracked, will have <code>git checkout</code>’s tree-diff logic delete those files from the working copy — it has no memory that the removal was <code>--cached</code>-only. Recoverable via <code>git archive &lt;last-good-commit&gt; -- &lt;path&gt;</code> piped to <code>tar -x</code> as long as the old commit hasn’t been gc’d yet, but better to expect it in advance. Bit us with <code>fits/</code>/<code>outputs/</code> (#26, during a post-merge branch switch) — worth remembering if another gitignored-but-still-tracked directory turns up later.</li>
+<li>
+<strong>A history rewrite (<code>git filter-repo</code> or similar) isn’t actually done until every backup ref is gone.</strong> A backup tag/branch, <code>ORIG_HEAD</code> (auto-created by <code>git reset --hard</code>), or a stale remote-tracking branch for an already-deleted PR branch (left behind by a <code>git fetch</code> without <code>--prune</code>) all pin the <em>entire</em> old history reachable — <code>git gc</code> and GitHub’s own repack can’t reclaim anything while any of them exist, and a fresh clone still pulls the old blobs via any lingering tag. After a rewrite: delete the backup tag once verified, <code>git update-ref -d ORIG_HEAD</code>, and <code>git fetch --prune</code> before expecting <code>git gc --prune=now</code> to actually shrink anything (#26).</li>
+</ul></div>
+<div class="section level2">
 <h2 id="tooling">Tooling<a class="anchor" aria-label="anchor" href="#tooling"></a></h2>
 <ul><li>Use Context7 to check up-to-date docs when implementing new libraries/frameworks or adding features using them.</li>
 </ul></div>
