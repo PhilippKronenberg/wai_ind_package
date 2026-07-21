@@ -168,3 +168,83 @@ SECO-WEA, F-CURVE, SECO-SEC, SNB-BCI and KOF-BARO benchmarks), see the
 call `get_combined_cor_table()`, `get_insample_fit_table()`,
 `create_rel_error_tables()` and related functions documented under
 `?get_combined_cor_table`.
+
+## References
+
+### Methodology / WAI background
+
+- Kronenberg, P. (2026) — *A high-frequency GDP indicator for
+  Switzerland*, Swiss Journal of Economics and Statistics, 162:10.
+  <https://doi.org/10.1186/s41937-026-00157-w>. The primary methodology
+  and application paper for this package: derives the WAI as a single,
+  GDP-identified factor from the model above, with full in-sample and
+  real-time out-of-sample evaluation against the benchmarks listed
+  below.
+- Eckert, F., Kronenberg, P., Mikosch, H., & Neuwirth, S. (2025) —
+  *Tracking economic activity with alternative high-frequency data*,
+  Journal of Applied Econometrics, 40(3), 270-290. The underlying
+  (multi-factor) Bayesian mixed-frequency dynamic factor model that
+  `hfdfm()` implements as a single-factor special case.
+- Eckert, Kronenberg, Mikosch, Neuwirth — *Weekly Activity Index (WWA)*,
+  SECO technical note and press material, 2021. Available from SECO
+  (seco.admin.ch).
+- SECO — *Die Wöchentliche Wirtschaftsaktivität (WWA)*, Diskussionspapier.
+- SECO — *Konjunkturtendenzen*, Exkurs on the WWA, issue 2020/4.
+- SECO — *BIP-Flash Machbarkeitsstudie*, May 2024.
+- SECO — *Einfliessende Indikatoren* (WWA input indicator list).
+- SECO — *Methodik* note.
+
+### Model derivation references (cited in Kronenberg 2026, Sect. 2)
+
+- Chan, J. C., & Jeliazkov, I. (2009) — *Efficient simulation and
+  integrated likelihood estimation in state space models*, International
+  Journal of Mathematical Modelling and Numerical Optimisation, 1(1-2),
+  101-120. Precision sampler used for the factor, stochastic volatility,
+  and augmented-data Gibbs blocks.
+- Chib, S., & Greenberg, E. (1994) — *Bayes inference in regression
+  models with ARMA(p,q) errors*, Journal of Econometrics, 64(1-2),
+  183-206. Quasi-differencing approach used to remove serial correlation
+  in the measurement errors.
+- Mariano, R. S., & Murasawa, Y. (2003) — *A new coincident index of
+  business cycles based on monthly and quarterly series*, Journal of
+  Applied Econometrics, 18(4), 427-443. Geometric-mean temporal
+  aggregation scheme for flow variables (the distributed lag matrices
+  `L0, ..., Ls`).
+- Bai, J., & Wang, P. (2015) — *Identification and Bayesian estimation
+  of dynamic factor models*, Journal of Business & Economic Statistics,
+  33(2), 221-240. Factor loading normalization used for identification.
+- Kim, S., Shepherd, N., & Chib, S. (1998) — *Stochastic volatility:
+  Likelihood inference and comparison with ARCH models*, Review of
+  Economic Studies, 65(3), 361-393. Mixture-of-normals approximation
+  used to linearize the stochastic volatility measurement equation.
+- Primiceri, G. E. (2005) — *Time varying structural vector
+  autoregressions and monetary policy*, Review of Economic Studies,
+  72(3), 821-852.
+- Indergand, R., & Leist, S. (2014) — *A Real-Time Data Set for
+  Switzerland*, Swiss Journal of Economics and Statistics, 150(4),
+  331-352. Source of the real-time GDP vintages read by
+  `get_real_time_gdp_vintages()`.
+
+### Swiss business-cycle indicator benchmarks
+
+The in-sample and out-of-sample evaluations compare the WAI against
+these existing Swiss business-cycle indicators:
+
+- Glocker, C. and Kaniovski, S. (2018) — *Evaluation of Swiss Business
+  Cycle Indicators*, WIFO.
+- Glocker, C. and Wegmüller, P. (2019) — *30 Indikatoren auf einen
+  Schlag*, Die Volkswirtschaft.
+- Wegmüller, P. and Glocker, C. (2024) — *Capturing Swiss Economic
+  Confidence*.
+- Abberger, K. et al. (2014) — *The KOF Economic Barometer*, KOF, ETH
+  Zurich.
+- Abberger, K. et al. (2018) — *Using rule-based updating procedures to
+  improve the performance*.
+- Indergand, R. and Leist, S. (2014) — *A Real-Time Data Set for
+  Switzerland*.
+- Siliverstovs, B. (2011) — *The Real-Time Predictive Content*.
+
+### Official statistics documentation
+
+- FSO — national accounts documentation.
+- SNB — Quartalsbulletin 2018/1.

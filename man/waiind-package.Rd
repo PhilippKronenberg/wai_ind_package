@@ -62,8 +62,7 @@ dynamic factor model underlying \code{waiind}; this package estimates the
 single-factor, GDP-identified special case used in the WAI.)
 
 A reference list of the related business-cycle-indicator literature
-is kept in \code{analysis/benchmarks/literature.md} of the source
-repository.
+is in the "References" section of \code{vignette("waiind")}.
 }
 \seealso{
 Useful links:

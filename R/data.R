@@ -1,10 +1,11 @@
 #' Harmonized Swiss indicator dataset for the WAI model
 #'
-#' The curated, model-ready dataset produced by the data preparation
-#' pipeline in `data-raw/1_data_prep_dataset.R`. Mixed-frequency time
-#' series are harmonized to the project conventions (weekly series use
-#' 48 observations per year) and transformed according to the variable
-#' metadata in `data-raw/data_meta.xlsx`.
+#' The curated, model-ready dataset shipped with the package.
+#' Mixed-frequency time series are harmonized to the project conventions
+#' (weekly series use 48 observations per year) and transformed
+#' according to the variable metadata in `data-raw/data_meta.xlsx` (see
+#' the data dictionary in `README.md` for the per-series source,
+#' category, unit, and transformation).
 #'
 #' @format A list with two components, as expected by `hfdfm()`:
 #' \describe{
@@ -18,8 +19,8 @@
 #'     variables.}
 #' }
 #' @source Produced from SECO, KOF, FSO, SNB, Datastream and further
-#'   high-frequency sources; see `data-raw/README_data_prep_dataset.md`
-#'   for the per-series preprocessing choices.
+#'   high-frequency sources; see the data dictionary in `README.md` for
+#'   the per-series source and metadata.
 "data_ch_dataset"
 
 #' Harmonized Swiss indicator dataset (test variant)

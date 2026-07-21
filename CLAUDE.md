@@ -27,9 +27,7 @@ Documentation is generated from roxygen2 comments; **do not hand-edit `NAMESPACE
 ├── inst/extdata/           # realtime_gdp.csv, realtime_gdp_cssa.csv (real-time GDP vintages)
 ├── vignettes/waiind.Rmd    # "Get started" vignette
 ├── tests/testthat/         # One test file per R/ source file (see "Testing" below)
-├── data-raw/               # Data preparation pipeline (not part of the built package)
-│   ├── 1_data_prep_dataset.R
-│   └── README_data_prep_dataset.md
+├── data-raw/               # data_meta.xlsx: variable metadata source for the README data dictionary
 ├── analysis/                       # Research workflow scripts (not part of the built package)
 │   ├── 0_test.R, 2_backcast.R, 4_tables.R, real_time_backcast.R,
 │   │   compare_dataset_to_legacy.R
