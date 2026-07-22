@@ -135,29 +135,40 @@ pre-merge.
 
 ## CI / workflows
 
-- **`.github/workflows/r.yml`** — `R CMD check` on push/PR to `main`.
-  Matrix: ubuntu-latest (release + oldrel-1), macos-latest (release),
-  windows-latest (release). Uses `r-lib/actions` v2 (`setup-r`,
+- **`.github/workflows/r.yml`** — `R CMD check` on push/PR to `main`
+  (skips doc-only/`analysis/`-only changes via `paths-ignore`, since
+  neither affects the built package). Matrix: ubuntu-latest (release +
+  oldrel-1), macos-latest (release), windows-latest (release),
+  `timeout-minutes: 30`. Uses `r-lib/actions` v2 (`setup-r`,
   `setup-r-dependencies`, `check-r-package`), `error-on: "warning"`. Any
   new dependency must be declared in `DESCRIPTION` (Imports for runtime
   code, Suggests for analysis-only/optional) or this fails.
+  `concurrency` cancels a stale run when you push again to the same ref.
 - **`.github/workflows/test-coverage.yaml`** — runs covr and uploads to
-  Codecov on push/PR to `main`. **Needs a `CODECOV_TOKEN` repo secret**
-  (sign in to codecov.io with GitHub, authorize this repo, add the
-  secret) to actually upload; until then it runs but the upload step
-  no-ops without failing.
+  Codecov on push/PR to `main` (same
+  `paths-ignore`/`concurrency`/`timeout-minutes: 30` as `r.yml`).
+  **Needs a `CODECOV_TOKEN` repo secret** (sign in to codecov.io with
+  GitHub, authorize this repo, add the secret) to actually upload; until
+  then it runs but the upload step no-ops without failing. Failure
+  artifacts are kept 14 days (`retention-days`).
 - **`.github/workflows/pkgdown.yaml`** — builds the pkgdown site and
-  deploys to the `gh-pages` branch on push to `main`. **Needs GitHub
-  Pages enabled once** (Settings → Pages → Branch: `gh-pages`) after the
-  first successful post-merge run creates that branch.
+  deploys to the `gh-pages` branch on push to `main`
+  (`timeout-minutes: 15`; no `paths-ignore` since almost anything in
+  `R/`/`man/`/`vignettes/`/`README.md`/`_pkgdown.yml` can affect the
+  site, and getting that filter subtly wrong is worse than an occasional
+  unnecessary run). **Needs GitHub Pages enabled once** (Settings →
+  Pages → Branch: `gh-pages`) after the first successful post-merge run
+  creates that branch.
 - **`.github/workflows/claude-code.yml`** — `@claude` mentions in
   issue/PR comments and reviews, or manual `workflow_dispatch`.
+  `timeout-minutes: 30`.
 - **`.github/workflows/claude-code-review.yml`** — automatic Claude
   review on every PR open/update (consumes API/subscription quota per
   PR; salvaged from an orphaned branch, has commented-out filters for
   paths/authors if it ever needs restricting). **Currently disabled** to
   conserve Claude usage: its `pull_request` trigger is commented out,
   leaving only `workflow_dispatch`. Restore by uncommenting that block.
+  `timeout-minutes: 30`.
 
 ## Working efficiently (token/compute budget)
 
