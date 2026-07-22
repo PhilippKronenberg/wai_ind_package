@@ -31,7 +31,7 @@ if (!exists("sample_config") || is.null(sample_config)) {
   sample_config <- list(
     sample_id = "sample_2025Q4",
     sample_end_date = as.Date("2026-03-07"),
-    output_root = file.path("outputs", "plots_insample", "sample_2025Q4"),
+    output_root = file.path("analysis", "outputs", "plots_insample", "sample_2025Q4"),
     fit_root = "fits",
     fit_rt_dir = file.path("fits", "updated", "full_RT")
   )

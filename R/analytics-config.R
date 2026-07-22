@@ -32,7 +32,7 @@
 #' @export
 wai_sample_config <- function(sample_id = "sample_2025Q4",
                               sample_end_date = as.Date("2026-03-07"),
-                              output_root = file.path("outputs", "plots_insample", sample_id),
+                              output_root = file.path("analysis", "outputs", "plots_insample", sample_id),
                               fit_root = "fits",
                               fit_rt_dir = file.path(fit_root, "full_RT")) {
 
@@ -145,7 +145,7 @@ save_result_output <- function(object, filename, results_dir) {
 #'
 #' @return The full file path.
 #' @examples
-#' output_figure_path("history.pdf", figures_dir = "outputs/figures")
+#' output_figure_path("history.pdf", figures_dir = "analysis/outputs/figures")
 #' @export
 output_figure_path <- function(filename, figures_dir) {
   file.path(figures_dir, filename)

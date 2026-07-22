@@ -13,6 +13,11 @@ library(readxl)
 
 library(waiind)
 
+sample_config <- wai_sample_config(sample_id = "mcmc_stability",
+                                    output_root = file.path("analysis", "outputs", "mcmc_stability"))
+figures_dir <- sample_config$figures_dir
+tables_dir <- sample_config$tables_dir
+
 
 # SETTINGS ----------------------------------------------------------------
 
@@ -353,13 +358,11 @@ recommendation <- build_recommendation(stability_summary)
 
 # SAVE OUTPUTS ------------------------------------------------------------
 
-dir.create("outputs/mcmc_stability", recursive = TRUE, showWarnings = FALSE)
-
-write_csv(reference_components, "outputs/mcmc_stability/reference_components.csv")
-write_csv(candidate_components, "outputs/mcmc_stability/candidate_components.csv")
-write_csv(comparison_table, "outputs/mcmc_stability/component_comparison.csv")
-write_csv(stability_summary, "outputs/mcmc_stability/stability_summary.csv")
-write_csv(recommendation, "outputs/mcmc_stability/recommendation.csv")
+write_csv(reference_components, file.path(tables_dir, "reference_components.csv"))
+write_csv(candidate_components, file.path(tables_dir, "candidate_components.csv"))
+write_csv(comparison_table, file.path(tables_dir, "component_comparison.csv"))
+write_csv(stability_summary, file.path(tables_dir, "stability_summary.csv"))
+write_csv(recommendation, file.path(tables_dir, "recommendation.csv"))
 
 
 # PLOTS -------------------------------------------------------------------
@@ -367,13 +370,13 @@ write_csv(recommendation, "outputs/mcmc_stability/recommendation.csv")
 plot_heatmap(
   summary_tab = stability_summary,
   recommendation_tab = recommendation,
-  file_name = "figures/mcmc_stability_heatmap.png"
+  file_name = file.path(figures_dir, "mcmc_stability_heatmap.png")
 )
 
 plot_frontier(
   summary_tab = stability_summary,
   recommendation_tab = recommendation,
-  file_name = "figures/mcmc_stability_frontier.png"
+  file_name = file.path(figures_dir, "mcmc_stability_frontier.png")
 )
 
 
@@ -419,10 +422,10 @@ cat("Elapsed seconds: ", signif(recommendation$elapsed_seconds, 5), "\n", sep = 
 print(stability_summary)
 
 message("Saved:")
-message("  outputs/mcmc_stability/reference_components.csv")
-message("  outputs/mcmc_stability/candidate_components.csv")
-message("  outputs/mcmc_stability/component_comparison.csv")
-message("  outputs/mcmc_stability/stability_summary.csv")
-message("  outputs/mcmc_stability/recommendation.csv")
-message("  figures/mcmc_stability_heatmap.png")
-message("  figures/mcmc_stability_frontier.png")
+message("  ", file.path(tables_dir, "reference_components.csv"))
+message("  ", file.path(tables_dir, "candidate_components.csv"))
+message("  ", file.path(tables_dir, "component_comparison.csv"))
+message("  ", file.path(tables_dir, "stability_summary.csv"))
+message("  ", file.path(tables_dir, "recommendation.csv"))
+message("  ", file.path(figures_dir, "mcmc_stability_heatmap.png"))
+message("  ", file.path(figures_dir, "mcmc_stability_frontier.png"))

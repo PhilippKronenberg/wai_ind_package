@@ -11,7 +11,7 @@ A list with two components, as expected by \code{hfdfm()}:
 variables. The quarterly GDP target series is \emph{not} included;
 the analysis scripts add it at runtime from the real-time GDP
 vintage database that ships with the package at
-\code{system.file("extdata", "realtime_database_GDP.xlsx", package = "waiind")}
+\code{system.file("extdata", "realtime_gdp.csv", package = "waiind")}
 (see \code{get_real_time_gdp_vintages()}).}
 \item{stocks}{Named list of 7 \code{ts} objects treated as stock
 variables.}
@@ -19,17 +19,18 @@ variables.}
 }
 \source{
 Produced from SECO, KOF, FSO, SNB, Datastream and further
-high-frequency sources; see \code{data-raw/README_data_prep_dataset.md}
-for the per-series preprocessing choices.
+high-frequency sources; see the data dictionary in \code{README.md} for
+the per-series source and metadata.
 }
 \usage{
 data_ch_dataset
 }
 \description{
-The curated, model-ready dataset produced by the data preparation
-pipeline in \verb{data-raw/1_data_prep_dataset.R}. Mixed-frequency time
-series are harmonized to the project conventions (weekly series use
-48 observations per year) and transformed according to the variable
-metadata in \code{data-raw/data_meta.xlsx}.
+The curated, model-ready dataset shipped with the package.
+Mixed-frequency time series are harmonized to the project conventions
+(weekly series use 48 observations per year) and transformed
+according to the variable metadata in \code{data-raw/data_meta.csv} (see
+the data dictionary in \code{README.md} for the per-series source,
+category, unit, and transformation).
 }
 \keyword{datasets}

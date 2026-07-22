@@ -6,6 +6,7 @@
 library(dplyr)
 library(ggplot2)
 library(waiind)
+source("analysis/5_plots/_setup.R")  # figures_dir / tables_dir / results_dir
 
 fit_root <- "fits"  # root of the model fits (git-ignored)
 
@@ -58,7 +59,7 @@ ggplot(data = tab, mapping = aes(x = time, y = values, group = variable, color =
         panel.grid.minor.x = element_blank(),
         panel.grid.minor.y = element_blank())
 
-ggsave("figures/pars_stability_sigma.png",width = 20, height = 8, units = "cm")
+ggsave(file.path(figures_dir, "pars_stability_sigma.png"),width = 20, height = 8, units = "cm")
 
 # rho
 tab <- out %>% filter(grepl("rho",out$variable))
@@ -81,7 +82,7 @@ ggplot(data = tab, mapping = aes(x = time, y = values, group = variable, color =
         panel.grid.minor.x = element_blank(),
         panel.grid.minor.y = element_blank())
 
-ggsave("figures/pars_stability_rho.png",width = 20, height = 8, units = "cm")
+ggsave(file.path(figures_dir, "pars_stability_rho.png"),width = 20, height = 8, units = "cm")
 
 # lambda
 tab <- out %>% filter(grepl("lambda",out$variable))
@@ -100,7 +101,7 @@ ggplot(data = tab, mapping = aes(x = time, y = values, group = variable, color =
         panel.grid.minor.x = element_blank(),
         panel.grid.minor.y = element_blank())
 
-ggsave("figures/pars_stability_lambda.png",width = 20, height = 8, units = "cm")
+ggsave(file.path(figures_dir, "pars_stability_lambda.png"),width = 20, height = 8, units = "cm")
 
 # omega
 tab <- out %>% filter(grepl("omega",out$variable))
@@ -119,7 +120,7 @@ ggplot(data = tab, mapping = aes(x = time, y = values, group = variable, color =
         panel.grid.minor.x = element_blank(),
         panel.grid.minor.y = element_blank())
 
-ggsave("figures/pars_stability_omega.png",width = 20, height = 8, units = "cm")
+ggsave(file.path(figures_dir, "pars_stability_omega.png"),width = 20, height = 8, units = "cm")
 
 # phi
 tab <- out %>% filter(grepl("phi",out$variable))
@@ -139,4 +140,4 @@ ggplot(data = tab, mapping = aes(x = time, y = values, group = variable, color =
         panel.grid.minor.x = element_blank(),
         panel.grid.minor.y = element_blank())
 
-ggsave("figures/pars_stability_phi.png",width = 20, height = 8, units = "cm")
+ggsave(file.path(figures_dir, "pars_stability_phi.png"),width = 20, height = 8, units = "cm")

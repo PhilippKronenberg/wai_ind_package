@@ -52,8 +52,7 @@
 #' single-factor, GDP-identified special case used in the WAI.)
 #'
 #' A reference list of the related business-cycle-indicator literature
-#' is kept in `analysis/benchmarks/literature.md` of the source
-#' repository.
+#' is in the "References" section of `vignette("waiind")`.
 #'
 #' @keywords internal
 "_PACKAGE"

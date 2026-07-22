@@ -31,9 +31,7 @@ test_that("cut_data_real_time substitutes the target with the right vintage", {
 })
 
 test_that("the shipped GDP vintage database reads and is well-formed", {
-  # readxl warns about date cells in the header row it reads as numeric;
-  # that is expected for this spreadsheet layout.
-  vintages <- suppressWarnings(get_real_time_gdp_vintages("quarterly"))
+  vintages <- get_real_time_gdp_vintages("quarterly")
   expect_s3_class(vintages$time, "Date")
   expect_gt(ncol(vintages), 50)
   vintage_names <- suppressWarnings(as.numeric(names(vintages)[-1]))

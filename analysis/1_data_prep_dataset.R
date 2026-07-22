@@ -72,7 +72,7 @@
 # Paths are relative to the repository root.
 project_dir <- "."
 
-metadata_path <- file.path("data-raw", "data_meta.xlsx")
+metadata_path <- file.path("data-raw", "data_meta.csv")
 dataset_dir <- file.path(project_dir, "data", "dataset")  # raw source files (not in the repo)
 rda_dir <- file.path("analysis", "Rda")
 out_dir <- file.path("analysis", "out")
@@ -88,7 +88,6 @@ dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 # Helper packages used by the prep pipeline. All are declared in the package
 # DESCRIPTION (Imports/Suggests); install them once via
 # remotes::install_deps(dependencies = TRUE) instead of installing at runtime.
-library(openxlsx)
 library(zoo)
 library(forecast)
 library(dplyr)
@@ -97,7 +96,7 @@ library(tseries)
 library(waiind)
 
 # Load variable metadata that controls source ordering, frequency, and transformation.
-metadata <- openxlsx::read.xlsx(metadata_path, sheet = "variables") |>
+metadata <- utils::read.csv(metadata_path) |>
   dplyr::mutate(
     Frequency = as.integer(Frequency),
     Flow = as.integer(Flow)

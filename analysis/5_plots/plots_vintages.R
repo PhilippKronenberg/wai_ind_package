@@ -14,6 +14,7 @@ library(ggsci)
 library(RColorBrewer)
  
 library(waiind)
+source("analysis/5_plots/_setup.R")  # figures_dir / tables_dir / results_dir
 
 fit_root <- "fits/updated"  # root of the model fits (git-ignored)
 
@@ -150,7 +151,7 @@ ggplot() +
   #scale_y_continuous(limits = c(-120,+100), expand = expansion(mult = c(0.3,0))) +
   scale_x_date(limits = as.Date(c(startdate, enddate)), breaks = date_breaks("2 months"), labels = date_format("%b-%y"))
   
-ggsave("figures/first_vs_final_vintage_corona.pdf",width = 20, height = 15, units = "cm")
+ggsave(file.path(figures_dir, "first_vs_final_vintage_corona.pdf"),width = 20, height = 15, units = "cm")
 
 
 # 
@@ -276,7 +277,7 @@ ggplot(tab_rev, aes(x = time, y = value, group = Releases, color = Releases)) +
         panel.grid.minor.y = element_blank()) +
   guides(color=guide_colourbar(barwidth=20, barheight = 0.25))
 
-ggsave("figures/real_time_factor_revisions.pdf",width = 20, height = 15, units = "cm")
+ggsave(file.path(figures_dir, "real_time_factor_revisions.pdf"),width = 20, height = 15, units = "cm")
 
 
 
@@ -326,7 +327,7 @@ ggplot(tab_rev_facets, aes(x = time, y = value, group = Releases, color = Releas
   ) +
   guides(color = guide_colourbar(barwidth = 20, barheight = 0.25))
 
-ggsave("figures/vintages_subperiods.pdf",width = 33, height = 44, units = "cm")
+ggsave(file.path(figures_dir, "vintages_subperiods.pdf"),width = 33, height = 44, units = "cm")
 
 
 # CREATE REAL-TIME FACTOR REVISIONS EXCLUDING CORONA-----------------------------------
@@ -395,7 +396,7 @@ ggplot(tab_rev, aes(x = time, y = value, group = Releases, color = Releases)) +
         panel.grid.minor.y = element_blank()) +
   guides(color=guide_colourbar(barwidth=20, barheight = 0.25))
 
-ggsave("figures/real_time_factor_revisions_excl_corona.pdf",width = 20, height = 15, units = "cm")
+ggsave(file.path(figures_dir, "real_time_factor_revisions_excl_corona.pdf"),width = 20, height = 15, units = "cm")
 
 
 # CREATE REAL-TIME FACTOR REVISIONS FOR CORONA CRISIS -----------------------------------
@@ -451,7 +452,7 @@ ggplot(tab_rev, aes(x = time, y = value, group = Releases, color = Releases)) +
         panel.grid.minor.y = element_blank()) +
   guides(color=guide_colourbar(barwidth=20, barheight = 0.25))
 
-ggsave("figures/real_time_factor_revisions_incl_corona.pdf",width = 20, height = 15, units = "cm")
+ggsave(file.path(figures_dir, "real_time_factor_revisions_incl_corona.pdf"),width = 20, height = 15, units = "cm")
 
 
 ####################################################################################
@@ -505,7 +506,7 @@ ggplot(tab_test, aes(x = time, y = value, color = type, fill = type)) +
   guides(color=guide_legend(override.aes=list(fill=NA)))
 
 
-ggsave("figures/mid_period1m__vs_finalvs_real_vintage_corona.pdf",width = 20, height = 15, units = "cm")
+ggsave(file.path(figures_dir, "mid_period1m__vs_finalvs_real_vintage_corona.pdf"),width = 20, height = 15, units = "cm")
 
 
 ################### CODE GRAVEYARD ###########################----------------------------------------------------------
