@@ -30,7 +30,7 @@ Documentation is generated from roxygen2 comments; **do not hand-edit `NAMESPACE
 ├── data-raw/               # data_meta.csv: variable metadata source for the README data dictionary
 ├── analysis/                       # Research workflow scripts (not part of the built package)
 │   ├── 1_data_prep_dataset.R, 2_backcast.R, 4_tables.R, real_time_backcast.R,
-│   │   compare_dataset_to_legacy.R, 0_test.R
+│   │   0_test.R
 │   ├── 5_plots/                    # In-sample / out-of-sample evaluation scripts
 │   │   └── _setup.R                # Shared prelude: library(waiind) + wai_sample_config()
 │   ├── outputs/                    # figures/tables/results per wai_sample_config() (gitignored)
