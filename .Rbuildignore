@@ -14,5 +14,4 @@
 ^\.vscode$
 ^docs$
 ^_pkgdown\.yml$
-^outputs$
 ^fits$

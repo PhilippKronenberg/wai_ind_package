@@ -12,7 +12,9 @@ library(readxl)
 
 library(waiind)
 
-
+sample_config <- wai_sample_config(sample_id = "0_test",
+                                    output_root = file.path("analysis", "outputs", "0_test"))
+results_dir <- sample_config$results_dir
 
 
 # IMPORT DATA -------------------------------------------------------------
@@ -86,7 +88,7 @@ out <- hfdfm(flows = dat$flows,
              target = target)
 
 
-save(out, file = "analysis/archive/final_20_04_2026.Rda")
+save_result_output(out, "final_20_04_2026.rda", results_dir)
 
 
 # CHECK FORECAST DISTRIBUTION ---------------------------------------------

@@ -29,12 +29,12 @@ Documentation is generated from roxygen2 comments; **do not hand-edit `NAMESPACE
 ├── tests/testthat/         # One test file per R/ source file (see "Testing" below)
 ├── data-raw/               # data_meta.csv: variable metadata source for the README data dictionary
 ├── analysis/                       # Research workflow scripts (not part of the built package)
-│   ├── 0_test.R, 2_backcast.R, 4_tables.R, real_time_backcast.R,
-│   │   compare_dataset_to_legacy.R
+│   ├── 1_data_prep_dataset.R, 2_backcast.R, 4_tables.R, real_time_backcast.R,
+│   │   compare_dataset_to_legacy.R, 0_test.R
 │   ├── 5_plots/                    # In-sample / out-of-sample evaluation scripts
 │   │   └── _setup.R                # Shared prelude: library(waiind) + wai_sample_config()
+│   ├── outputs/                    # figures/tables/results per wai_sample_config() (gitignored)
 │   ├── Rda/, out/, benchmarks/     # Data/output; most binary content is gitignored (see below)
-│   └── archive/
 ├── .github/workflows/
 │   ├── r.yml                  # R CMD check: ubuntu (release+oldrel-1), macos, windows
 │   ├── test-coverage.yaml     # covr -> Codecov (needs a CODECOV_TOKEN secret, see below)

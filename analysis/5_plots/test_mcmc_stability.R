@@ -14,7 +14,7 @@ library(readxl)
 library(waiind)
 
 sample_config <- wai_sample_config(sample_id = "mcmc_stability",
-                                    output_root = file.path("outputs", "mcmc_stability"))
+                                    output_root = file.path("analysis", "outputs", "mcmc_stability"))
 figures_dir <- sample_config$figures_dir
 tables_dir <- sample_config$tables_dir
 
