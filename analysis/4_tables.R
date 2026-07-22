@@ -22,6 +22,7 @@ library(zoo)      # for as.yearmon, as.yearqtr
 # IMPORT DATA -------------------------------------------------------------
 
 library(waiind)
+source("analysis/5_plots/_setup.R")  # figures_dir / tables_dir / results_dir
 
 fit_root <- "fits"  # root of the model fits (git-ignored)
 
@@ -149,7 +150,7 @@ metadata_small <- metadata
 metadata <- subset(metadata, select = c("Name","Category","Frequency","Release Lag","Start Date","End Date","Unit","Transformation","Type","Source"))
 
 # Table as Latex Output
-print(xtable(metadata), include.rownames=FALSE, type = "latex", file = "figures/datatable.tex")
+print(xtable(metadata), include.rownames=FALSE, type = "latex", file = file.path(tables_dir, "datatable.tex"))
 
 
 # Lambda Table ------------------------------------------------------------
@@ -668,7 +669,7 @@ table_rho$Frequency[table_rho$Frequency==48] <- "Daily"
 table_rho$Frequency[table_rho$Name=="Credit Card Transactions, Swiss-Wide Frequency"] <- "Weekly"
 
 # print table as latex output
-print(xtable(table_rho), include.rownames=FALSE, type = "latex", file = "figures/table_rho.tex")
+print(xtable(table_rho), include.rownames=FALSE, type = "latex", file = file.path(tables_dir, "table_rho.tex"))
 
 # calculate statistics
 # number of statistically significant rhos at 99%, 95%, 90%
