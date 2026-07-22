@@ -29,7 +29,7 @@ data_ch_dataset
 The curated, model-ready dataset shipped with the package.
 Mixed-frequency time series are harmonized to the project conventions
 (weekly series use 48 observations per year) and transformed
-according to the variable metadata in \code{data-raw/data_meta.xlsx} (see
+according to the variable metadata in \code{data-raw/data_meta.csv} (see
 the data dictionary in \code{README.md} for the per-series source,
 category, unit, and transformation).
 }

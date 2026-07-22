@@ -78,7 +78,7 @@ The `analysis/` directory contains the scripts of the full research
 workflow (run from the repository root; model fits are written to a
 git-ignored `fits/` directory). `data_ch_dataset` / `data_ch_dataset_test`
 already ship as curated package datasets — see the data dictionary
-below, sourced from `data-raw/data_meta.xlsx` — so the pipeline starts
+below, sourced from `data-raw/data_meta.csv` — so the pipeline starts
 from there:
 
 1. **`analysis/2_backcast.R`**, **`analysis/real_time_backcast.R`** —
@@ -93,7 +93,7 @@ from there:
 ## Data
 
 | Object / file | What it is |
-|---|---|
+| --- | --- |
 | `data_ch_dataset` | Harmonized Swiss indicator dataset (flows/stocks lists of `ts`) |
 | `data_ch_dataset_test` | Test variant, includes the GDP target series |
 | `inst/extdata/realtime_gdp.csv`, `realtime_gdp_cssa.csv` | Real-time GDP vintage database (read by `get_real_time_gdp_vintages()`) |
@@ -104,7 +104,7 @@ series — the workflow injects it at runtime from the real-time vintages.
 ### Data dictionary
 
 The 46 variables in `data_ch_dataset`/`data_ch_dataset_test`, generated from
-`data-raw/data_meta.xlsx` (the source-of-truth variable metadata: name,
+`data-raw/data_meta.csv` (the source-of-truth variable metadata: name,
 provider, category, unit, frequency, flow/stock role):
 
 | Key | Name | Source | Category | Unit | Frequency | Type |

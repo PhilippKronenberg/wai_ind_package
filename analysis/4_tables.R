@@ -15,7 +15,6 @@ library(ggplot2)
 library(tibble)
 library(tidyr)
 library(dplyr)
-library(openxlsx)
 library(xtable)
 library(Matrix)
 library(zoo)      # for as.yearmon, as.yearqtr
@@ -32,7 +31,7 @@ load("analysis/Rda/data_ch_dataset_test.Rda")
 # Metadata Table ------------------------------------------------------------------
 
 # Get Metadata & Keys
-metadata <- openxlsx::read.xlsx("data-raw/data_meta.xlsx",sheet="variables")
+metadata <- utils::read.csv("data-raw/data_meta.csv")
 
 # Rename Columns
 names(metadata)[names(metadata) == "Flow"] <- "Type"
@@ -44,7 +43,7 @@ if (!"Keys" %in% names(date_ranges) && "series" %in% names(date_ranges)) {
   names(date_ranges)[names(date_ranges) == "series"] <- "Keys"
 }
 
-# Keep backwards compatibility with the legacy LIBOR key used in data_meta.xlsx.
+# Keep backwards compatibility with the legacy LIBOR key used in data_meta.csv.
 if ("ch.snb.zimoma.3m0" %in% metadata$Keys &&
     !"ch.snb.zimoma.3m0" %in% date_ranges$Keys &&
     "se.macrobond.chrate0006" %in% date_ranges$Keys) {
@@ -133,7 +132,7 @@ metadata$Frequency[metadata$Name=="Credit Card Transactions, Swiss-Wide Frequenc
 # Add Release Lag of Variables
  # Note: These release lags are not fully coherent with the release lags chosen 
  # for the out-of-sample evaluation in functions_backcast.R, function cut_data_helper (lines 91ff).
- # In a updated version of the code, set the release dates in data_meta.xlsx both as input 
+ # In a updated version of the code, set the release dates in data_meta.csv both as input
  # for the function cut_data_helper and for creation of the data table in here.
 
 metadata <- metadata %>%
@@ -183,7 +182,7 @@ var_names_no_financial <- dat_no_financial$inventory$key
 # dat_only_total_retail <- out
 # var_names_only_total_retail <- dat_only_total_retail$inventory$key
 
-#metadata <- openxlsx::read.xlsx("data-raw/data_meta.xlsx",sheet="variables")
+#metadata <- utils::read.csv("data-raw/data_meta.csv")
 
 
 
@@ -481,7 +480,7 @@ load(file.path(fit_root, "updated/full_RT/fit_2020.Rda"))
 dat_PC <- mod
 var_names_PC <- dat_PC$inventory$key
 
-#metadata <- openxlsx::read.xlsx("data-raw/data_meta.xlsx",sheet="variables")
+#metadata <- utils::read.csv("data-raw/data_meta.csv")
 
 
 
@@ -629,7 +628,7 @@ print(
 # Serial Correlation Table ---------------------------------------------
 
 # get metadata
-metadata <- openxlsx::read.xlsx("data-raw/data_meta.xlsx",sheet="variables")
+metadata <- utils::read.csv("data-raw/data_meta.csv")
 
 # get in-sample results
 load(file.path(fit_root, "updated/full_RT/fit_2025.979.Rda"))
@@ -695,7 +694,7 @@ data_vec <- c(dat$stocks,dat$flows)
 names(data_vec) <- c(names(dat$stocks),names(dat$flows))
 
 # get metadata
-metadata <- openxlsx::read.xlsx("data-raw/data_meta.xlsx",sheet="variables")
+metadata <- utils::read.csv("data-raw/data_meta.csv")
 
 # get variable names and sort them according to the in-sample results
 mod_var_names <- names(data_vec)
