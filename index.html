@@ -105,10 +105,8 @@
 <div class="section level2">
 <h2 id="the-analysis-pipeline">The analysis pipeline<a class="anchor" aria-label="anchor" href="#the-analysis-pipeline"></a>
 </h2>
-<p>The <code>analysis/</code> and <code>data-raw/</code> directories contain the scripts of the full research workflow (run from the repository root; model fits are written to a git-ignored <code>fits/</code> directory):</p>
+<p>The <code>analysis/</code> directory contains the scripts of the full research workflow (run from the repository root; model fits are written to a git-ignored <code>fits/</code> directory). <code>data_ch_dataset</code> / <code>data_ch_dataset_test</code> already ship as curated package datasets — see the data dictionary below, sourced from <code>data-raw/data_meta.csv</code> — so the pipeline starts from there:</p>
 <ol style="list-style-type: decimal">
-<li>
-<strong><code>data-raw/1_data_prep_dataset.R</code></strong> — builds the harmonized indicator dataset from the raw sources (documented in <code>data-raw/README_data_prep_dataset.md</code>); its curated outputs ship as the package datasets <code>data_ch_dataset</code> / <code>data_ch_dataset_test</code>.</li>
 <li>
 <strong><code>analysis/2_backcast.R</code></strong>, <strong><code>analysis/real_time_backcast.R</code></strong> — estimate the model across evaluation dates (pseudo and true real-time) via <code><a href="reference/run_wai_adj.html">run_wai_adj()</a></code> / <code><a href="reference/run_ar.html">run_ar()</a></code>.</li>
 <li>
@@ -139,12 +137,455 @@
 <td>Test variant, includes the GDP target series</td>
 </tr>
 <tr>
-<td><code>inst/extdata/realtime_database_GDP.xlsx</code></td>
+<td>
+<code>inst/extdata/realtime_gdp.csv</code>, <code>realtime_gdp_cssa.csv</code>
+</td>
 <td>Real-time GDP vintage database (read by <code><a href="reference/get_real_time_gdp_vintages.html">get_real_time_gdp_vintages()</a></code>)</td>
 </tr>
 </tbody>
 </table>
 <p>The full <code>data_ch_dataset</code> deliberately ships <em>without</em> the GDP target series — the workflow injects it at runtime from the real-time vintages.</p>
+<div class="section level3">
+<h3 id="data-dictionary">Data dictionary<a class="anchor" aria-label="anchor" href="#data-dictionary"></a>
+</h3>
+<p>The 46 variables in <code>data_ch_dataset</code>/<code>data_ch_dataset_test</code>, generated from <code>data-raw/data_meta.csv</code> (the source-of-truth variable metadata: name, provider, category, unit, frequency, flow/stock role):</p>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="14%">
+<col width="14%">
+<col width="14%">
+<col width="14%">
+<col width="14%">
+<col width="14%">
+<col width="14%">
+</colgroup>
+<thead><tr>
+<th>Key</th>
+<th>Name</th>
+<th>Source</th>
+<th>Category</th>
+<th>Unit</th>
+<th>Frequency</th>
+<th>Type</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>anz_kktrans_ch</code></td>
+<td>Credit Card Transactions, Swiss-Wide Frequency</td>
+<td>SPA</td>
+<td>Alternative</td>
+<td>Actual, in Thousands</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>Arbeitsmarkt</code></td>
+<td>Google Search Index, Perceived Labour Market Situation</td>
+<td>KOF</td>
+<td>Alternative</td>
+<td>Index</td>
+<td>Weekly</td>
+<td>Stock</td>
+</tr>
+<tr>
+<td><code>aufkommen_miv</code></td>
+<td>Private Transport Frequency, Important Counting Stations, Zurich</td>
+<td>StatistikZH</td>
+<td>Alternative</td>
+<td>Actual</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>bezug_bargeld</code></td>
+<td>Cash Withdrawals, Swiss-Wide Volume in CHF</td>
+<td>SIX Group</td>
+<td>Alternative</td>
+<td>CHF, in Millions</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>debiteinsatz_ausland</code></td>
+<td>Swiss Debit Card Transactions Abroad, Volume in CHF</td>
+<td>SIX Group</td>
+<td>Alternative</td>
+<td>CHF, in Millions</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>electricity_in</code></td>
+<td>Energy Production in Switzerland</td>
+<td>Swissgrid</td>
+<td>Alternative</td>
+<td>kWh</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>electricity_out</code></td>
+<td>Energy Consumed by Swiss End Users</td>
+<td>Swissgrid</td>
+<td>Alternative</td>
+<td>kWh</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>Lkw-Maut-Fahrleistungsindex_DE</code></td>
+<td>Truck-Toll Mileage Index, Germany</td>
+<td>Destatis</td>
+<td>Alternative</td>
+<td>Actual</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>mobility_grocery_and_pharmacy</code></td>
+<td>Google COVID-19 Community Mobility Reports, Grocery and Pharmacy</td>
+<td>Google</td>
+<td>Alternative</td>
+<td>Percentage</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>mobility_parks</code></td>
+<td>Google COVID-19 Community Mobility Reports, Parks</td>
+<td>Google</td>
+<td>Alternative</td>
+<td>Percentage</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>mobility_residential</code></td>
+<td>Google COVID-19 Community Mobility Reports, Residential</td>
+<td>Google</td>
+<td>Alternative</td>
+<td>Percentage</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>mobility_retail_and_recreation</code></td>
+<td>Google COVID-19 Community Mobility Reports, Retail and Recreation</td>
+<td>Google</td>
+<td>Alternative</td>
+<td>Percentage</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>mobility_transit_stations</code></td>
+<td>Google COVID-19 Community Mobility Reports, Transit Stations</td>
+<td>Google</td>
+<td>Alternative</td>
+<td>Percentage</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>mobility_workplaces</code></td>
+<td>Google COVID-19 Community Mobility Reports, Workplaces</td>
+<td>Google</td>
+<td>Alternative</td>
+<td>Percentage</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>oev_freq_hardbruecke</code></td>
+<td>Public Transport Passenger Frequency, Zurich Hardbruecke</td>
+<td>SBB</td>
+<td>Alternative</td>
+<td>Actual</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>oev_freq_hb</code></td>
+<td>Public Transport Passenger Frequency, Zurich Main Station</td>
+<td>SBB</td>
+<td>Alternative</td>
+<td>Actual</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>stat_einkauf</code></td>
+<td>Non-Online Retail Sales, Swiss-Wide Volume in CHF</td>
+<td>SIX Group</td>
+<td>Alternative</td>
+<td>CHF, in Millions</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>tages_distanz_median</code></td>
+<td>Median Day Distance of Representative Swiss Population Sample</td>
+<td>intervista</td>
+<td>Alternative</td>
+<td>km</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>traffic_LW</code></td>
+<td>Truck Frequency, Counting Stations on Major Swiss Motorways</td>
+<td>ASTRA</td>
+<td>Alternative</td>
+<td>Actual</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>traffic_PW</code></td>
+<td>Passenger Car Frequency, Counting Stations on Major Swiss Motorways</td>
+<td>ASTRA</td>
+<td>Alternative</td>
+<td>Actual</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>trendecon</code></td>
+<td>Google Search Index, Perceived Economic Situation</td>
+<td>trendEcon</td>
+<td>Alternative</td>
+<td>Index</td>
+<td>Weekly</td>
+<td>Stock</td>
+</tr>
+<tr>
+<td><code>zrh_airport_arrivals</code></td>
+<td>Total Flight Arrivals, Zurich Airport</td>
+<td>Zurich Airport</td>
+<td>Alternative</td>
+<td>Actual</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>zrh_airport_departure</code></td>
+<td>Total Flight Departures, Zurich Airport</td>
+<td>Zurich Airport</td>
+<td>Alternative</td>
+<td>Actual</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>FINANSW</code></td>
+<td>Swiss Stock Market Index, Financials</td>
+<td>Datastream</td>
+<td>Financial</td>
+<td>CHF</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>INDUSSW</code></td>
+<td>Swiss Stock Market Index, Industrials</td>
+<td>Datastream</td>
+<td>Financial</td>
+<td>CHF</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>SWISSMI</code></td>
+<td>Swiss Market Index (SMI)</td>
+<td>SIX Group</td>
+<td>Financial</td>
+<td>CHF</td>
+<td>Weekly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>VIX</code></td>
+<td>Volatility Index (VIX)</td>
+<td>CBOE</td>
+<td>Financial</td>
+<td>Index</td>
+<td>Weekly</td>
+<td>Stock</td>
+</tr>
+<tr>
+<td><code>SWCONPRCE</code></td>
+<td>Consumer Price Index, Total</td>
+<td>FSO</td>
+<td>Prices</td>
+<td>Index, 2015M12=100</td>
+<td>Monthly</td>
+<td>Stock</td>
+</tr>
+<tr>
+<td><code>SWCPCOREF</code></td>
+<td>Consumer Price Index, Excl. Energy, Fresh &amp; Seasonal Products</td>
+<td>FSO</td>
+<td>Prices</td>
+<td>Index, 2015M12=100</td>
+<td>Monthly</td>
+<td>Stock</td>
+</tr>
+<tr>
+<td><code>SWPROPRCE</code></td>
+<td>Producer Prices Index</td>
+<td>FSO</td>
+<td>Prices</td>
+<td>Index, 2015M12=100</td>
+<td>Monthly</td>
+<td>Stock</td>
+</tr>
+<tr>
+<td><code>ch.seco.gdp.real.gdp.ssa</code></td>
+<td>Gross Domestic Product, Adjusted for International Sport Events</td>
+<td>SECO</td>
+<td>Production</td>
+<td>CHF, Real Prices</td>
+<td>Quarterly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>ch.fso.rtt.ind.r.noga0801.sa</code></td>
+<td>Retail Sales, Total</td>
+<td>FSO</td>
+<td>Retail</td>
+<td>Index, 2015=100</td>
+<td>Monthly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>ch.kof.aiu.ng08.fx.q_ql_ass_bs.balance.d11</code></td>
+<td>Business Situation Assessment, Project Engineering</td>
+<td>KOF</td>
+<td>Survey</td>
+<td>Net Balance</td>
+<td>Monthly</td>
+<td>Stock</td>
+</tr>
+<tr>
+<td><code>ch.kof.bau.ng08.fx.q_ql_ass_bs.balance.d11</code></td>
+<td>Business Situation Assessment, Construction</td>
+<td>KOF</td>
+<td>Survey</td>
+<td>Net Balance</td>
+<td>Monthly</td>
+<td>Stock</td>
+</tr>
+<tr>
+<td><code>ch.kof.bts_total.ng08.fx.q_ql_ass_bs.balance.d11</code></td>
+<td>Business Situation Assessment, All Industries</td>
+<td>KOF</td>
+<td>Survey</td>
+<td>Net Balance</td>
+<td>Monthly</td>
+<td>Stock</td>
+</tr>
+<tr>
+<td><code>ch.kof.fvu.ng08.fx.q_ql_ass_bs.balance.d11</code></td>
+<td>Business Situation Assessment, Finance &amp; Insurance</td>
+<td>KOF</td>
+<td>Survey</td>
+<td>Net Balance</td>
+<td>Monthly</td>
+<td>Stock</td>
+</tr>
+<tr>
+<td><code>ch.kof.inu.ng08.fx.q_ql_ass_bs.balance.d11</code></td>
+<td>Business Situation Assessment, Manufacturing</td>
+<td>KOF</td>
+<td>Survey</td>
+<td>Net Balance</td>
+<td>Monthly</td>
+<td>Stock</td>
+</tr>
+<tr>
+<td><code>ch.kof.inu.ng08.fx.sector_mig.cap_gd.q_ql_ass_bs.balance.d11</code></td>
+<td>Business Situation Assessment, Manufacturing Investment Goods</td>
+<td>KOF</td>
+<td>Survey</td>
+<td>Net Balance</td>
+<td>Monthly</td>
+<td>Stock</td>
+</tr>
+<tr>
+<td><code>ch.kof.inu.ng08.fx.sector_mig.cons_dr.q_ql_ass_bs.balance.d11</code></td>
+<td>Business Situation Assessment, Manufacturing Durable Goods</td>
+<td>KOF</td>
+<td>Survey</td>
+<td>Net Balance</td>
+<td>Monthly</td>
+<td>Stock</td>
+</tr>
+<tr>
+<td><code>ch.kof.inu.ng08.fx.sector_mig.cons_gd.q_ql_ass_bs.balance.d11</code></td>
+<td>Business Situation Assessment, Manufacturing Consumption Goods</td>
+<td>KOF</td>
+<td>Survey</td>
+<td>Net Balance</td>
+<td>Monthly</td>
+<td>Stock</td>
+</tr>
+<tr>
+<td><code>ch.kof.inu.ng08.fx.sector_mig.imd_gd.q_ql_ass_bs.balance.d11</code></td>
+<td>Business Situation Assessment, Manufacturing Intermediate Goods</td>
+<td>KOF</td>
+<td>Survey</td>
+<td>Net Balance</td>
+<td>Monthly</td>
+<td>Stock</td>
+</tr>
+<tr>
+<td><code>SWPMIORDQ</code></td>
+<td>Purchasing Managers Index, Manufacturing Sector, Backlog of Orders</td>
+<td>procure.ch &amp; UBS</td>
+<td>Survey</td>
+<td>Index (Diffusion)</td>
+<td>Monthly</td>
+<td>Stock</td>
+</tr>
+<tr>
+<td><code>SWPMIPROQ</code></td>
+<td>Purchasing Managers Index, Manufacturing Sector, Output</td>
+<td>procure.ch &amp; UBS</td>
+<td>Survey</td>
+<td>Index (Diffusion)</td>
+<td>Monthly</td>
+<td>Stock</td>
+</tr>
+<tr>
+<td><code>SWPURCHSQ</code></td>
+<td>Purchasing Managers Index, Manufacturing Sector</td>
+<td>procure.ch &amp; UBS</td>
+<td>Survey</td>
+<td>Index (Diffusion)</td>
+<td>Monthly</td>
+<td>Stock</td>
+</tr>
+<tr>
+<td><code>ch.ozd.e.wa.index.re.d11</code></td>
+<td>Switzerland, Export: Total, Real, SA, Index (1997=100)</td>
+<td>FOCBS</td>
+<td>Trade</td>
+<td>Index</td>
+<td>Monthly</td>
+<td>Flow</td>
+</tr>
+<tr>
+<td><code>ch.ozd.i.wa.index.re.d11</code></td>
+<td>Switzerland, Import: Total, Real, SA, Index (1997=100)</td>
+<td>FOCBS</td>
+<td>Trade</td>
+<td>Index</td>
+<td>Monthly</td>
+<td>Flow</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div class="section level2">
 <h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
@@ -172,7 +613,7 @@
 <blockquote>
 <p>Eckert, F., Kronenberg, P., Mikosch, H., &amp; Neuwirth, S. (2025). Tracking economic activity with alternative high-frequency data. <em>Journal of Applied Econometrics</em>, 40(3), 270-290.</p>
 </blockquote>
-<p>A reference list of the related business-cycle-indicator literature is kept in <a href="analysis/benchmarks/literature.html"><code>analysis/benchmarks/literature.md</code></a>.</p>
+<p>A reference list of the related business-cycle-indicator literature is in the “References” section of <code><a href="articles/waiind.html">vignette("waiind")</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>

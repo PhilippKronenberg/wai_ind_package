@@ -73,22 +73,21 @@ dat <- cut_data_real_time(data_ch_dataset_test, current_date = 2024.5,
 
 ## The analysis pipeline
 
-The `analysis/` and `data-raw/` directories contain the scripts of the
-full research workflow (run from the repository root; model fits are
-written to a git-ignored `fits/` directory):
+The `analysis/` directory contains the scripts of the full research
+workflow (run from the repository root; model fits are written to a
+git-ignored `fits/` directory). `data_ch_dataset` /
+`data_ch_dataset_test` already ship as curated package datasets — see
+the data dictionary below, sourced from `data-raw/data_meta.csv` — so
+the pipeline starts from there:
 
-1.  **`data-raw/1_data_prep_dataset.R`** — builds the harmonized
-    indicator dataset from the raw sources (documented in
-    `data-raw/README_data_prep_dataset.md`); its curated outputs ship as
-    the package datasets `data_ch_dataset` / `data_ch_dataset_test`.
-2.  **`analysis/2_backcast.R`**, **`analysis/real_time_backcast.R`** —
+1.  **`analysis/2_backcast.R`**, **`analysis/real_time_backcast.R`** —
     estimate the model across evaluation dates (pseudo and true
     real-time) via
     [`run_wai_adj()`](https://philippkronenberg.github.io/wai_ind_package/reference/run_wai_adj.md)
     /
     [`run_ar()`](https://philippkronenberg.github.io/wai_ind_package/reference/run_ar.md).
-3.  **`analysis/4_tables.R`** — parameter and metadata tables.
-4.  **`analysis/5_plots/`** — in-sample and out-of-sample evaluation:
+2.  **`analysis/4_tables.R`** — parameter and metadata tables.
+3.  **`analysis/5_plots/`** — in-sample and out-of-sample evaluation:
     `plots_analytics.R` orchestrates `analytics_data.R`,
     `analytics_in_sample.R` and `analytics_out-of-sample.R`; the sample
     is configured via
@@ -101,10 +100,65 @@ written to a git-ignored `fits/` directory):
 |----|----|
 | `data_ch_dataset` | Harmonized Swiss indicator dataset (flows/stocks lists of `ts`) |
 | `data_ch_dataset_test` | Test variant, includes the GDP target series |
-| `inst/extdata/realtime_database_GDP.xlsx` | Real-time GDP vintage database (read by [`get_real_time_gdp_vintages()`](https://philippkronenberg.github.io/wai_ind_package/reference/get_real_time_gdp_vintages.md)) |
+| `inst/extdata/realtime_gdp.csv`, `realtime_gdp_cssa.csv` | Real-time GDP vintage database (read by [`get_real_time_gdp_vintages()`](https://philippkronenberg.github.io/wai_ind_package/reference/get_real_time_gdp_vintages.md)) |
 
 The full `data_ch_dataset` deliberately ships *without* the GDP target
 series — the workflow injects it at runtime from the real-time vintages.
+
+### Data dictionary
+
+The 46 variables in `data_ch_dataset`/`data_ch_dataset_test`, generated
+from `data-raw/data_meta.csv` (the source-of-truth variable metadata:
+name, provider, category, unit, frequency, flow/stock role):
+
+| Key | Name | Source | Category | Unit | Frequency | Type |
+|----|----|----|----|----|----|----|
+| `anz_kktrans_ch` | Credit Card Transactions, Swiss-Wide Frequency | SPA | Alternative | Actual, in Thousands | Weekly | Flow |
+| `Arbeitsmarkt` | Google Search Index, Perceived Labour Market Situation | KOF | Alternative | Index | Weekly | Stock |
+| `aufkommen_miv` | Private Transport Frequency, Important Counting Stations, Zurich | StatistikZH | Alternative | Actual | Weekly | Flow |
+| `bezug_bargeld` | Cash Withdrawals, Swiss-Wide Volume in CHF | SIX Group | Alternative | CHF, in Millions | Weekly | Flow |
+| `debiteinsatz_ausland` | Swiss Debit Card Transactions Abroad, Volume in CHF | SIX Group | Alternative | CHF, in Millions | Weekly | Flow |
+| `electricity_in` | Energy Production in Switzerland | Swissgrid | Alternative | kWh | Weekly | Flow |
+| `electricity_out` | Energy Consumed by Swiss End Users | Swissgrid | Alternative | kWh | Weekly | Flow |
+| `Lkw-Maut-Fahrleistungsindex_DE` | Truck-Toll Mileage Index, Germany | Destatis | Alternative | Actual | Weekly | Flow |
+| `mobility_grocery_and_pharmacy` | Google COVID-19 Community Mobility Reports, Grocery and Pharmacy | Google | Alternative | Percentage | Weekly | Flow |
+| `mobility_parks` | Google COVID-19 Community Mobility Reports, Parks | Google | Alternative | Percentage | Weekly | Flow |
+| `mobility_residential` | Google COVID-19 Community Mobility Reports, Residential | Google | Alternative | Percentage | Weekly | Flow |
+| `mobility_retail_and_recreation` | Google COVID-19 Community Mobility Reports, Retail and Recreation | Google | Alternative | Percentage | Weekly | Flow |
+| `mobility_transit_stations` | Google COVID-19 Community Mobility Reports, Transit Stations | Google | Alternative | Percentage | Weekly | Flow |
+| `mobility_workplaces` | Google COVID-19 Community Mobility Reports, Workplaces | Google | Alternative | Percentage | Weekly | Flow |
+| `oev_freq_hardbruecke` | Public Transport Passenger Frequency, Zurich Hardbruecke | SBB | Alternative | Actual | Weekly | Flow |
+| `oev_freq_hb` | Public Transport Passenger Frequency, Zurich Main Station | SBB | Alternative | Actual | Weekly | Flow |
+| `stat_einkauf` | Non-Online Retail Sales, Swiss-Wide Volume in CHF | SIX Group | Alternative | CHF, in Millions | Weekly | Flow |
+| `tages_distanz_median` | Median Day Distance of Representative Swiss Population Sample | intervista | Alternative | km | Weekly | Flow |
+| `traffic_LW` | Truck Frequency, Counting Stations on Major Swiss Motorways | ASTRA | Alternative | Actual | Weekly | Flow |
+| `traffic_PW` | Passenger Car Frequency, Counting Stations on Major Swiss Motorways | ASTRA | Alternative | Actual | Weekly | Flow |
+| `trendecon` | Google Search Index, Perceived Economic Situation | trendEcon | Alternative | Index | Weekly | Stock |
+| `zrh_airport_arrivals` | Total Flight Arrivals, Zurich Airport | Zurich Airport | Alternative | Actual | Weekly | Flow |
+| `zrh_airport_departure` | Total Flight Departures, Zurich Airport | Zurich Airport | Alternative | Actual | Weekly | Flow |
+| `FINANSW` | Swiss Stock Market Index, Financials | Datastream | Financial | CHF | Weekly | Flow |
+| `INDUSSW` | Swiss Stock Market Index, Industrials | Datastream | Financial | CHF | Weekly | Flow |
+| `SWISSMI` | Swiss Market Index (SMI) | SIX Group | Financial | CHF | Weekly | Flow |
+| `VIX` | Volatility Index (VIX) | CBOE | Financial | Index | Weekly | Stock |
+| `SWCONPRCE` | Consumer Price Index, Total | FSO | Prices | Index, 2015M12=100 | Monthly | Stock |
+| `SWCPCOREF` | Consumer Price Index, Excl. Energy, Fresh & Seasonal Products | FSO | Prices | Index, 2015M12=100 | Monthly | Stock |
+| `SWPROPRCE` | Producer Prices Index | FSO | Prices | Index, 2015M12=100 | Monthly | Stock |
+| `ch.seco.gdp.real.gdp.ssa` | Gross Domestic Product, Adjusted for International Sport Events | SECO | Production | CHF, Real Prices | Quarterly | Flow |
+| `ch.fso.rtt.ind.r.noga0801.sa` | Retail Sales, Total | FSO | Retail | Index, 2015=100 | Monthly | Flow |
+| `ch.kof.aiu.ng08.fx.q_ql_ass_bs.balance.d11` | Business Situation Assessment, Project Engineering | KOF | Survey | Net Balance | Monthly | Stock |
+| `ch.kof.bau.ng08.fx.q_ql_ass_bs.balance.d11` | Business Situation Assessment, Construction | KOF | Survey | Net Balance | Monthly | Stock |
+| `ch.kof.bts_total.ng08.fx.q_ql_ass_bs.balance.d11` | Business Situation Assessment, All Industries | KOF | Survey | Net Balance | Monthly | Stock |
+| `ch.kof.fvu.ng08.fx.q_ql_ass_bs.balance.d11` | Business Situation Assessment, Finance & Insurance | KOF | Survey | Net Balance | Monthly | Stock |
+| `ch.kof.inu.ng08.fx.q_ql_ass_bs.balance.d11` | Business Situation Assessment, Manufacturing | KOF | Survey | Net Balance | Monthly | Stock |
+| `ch.kof.inu.ng08.fx.sector_mig.cap_gd.q_ql_ass_bs.balance.d11` | Business Situation Assessment, Manufacturing Investment Goods | KOF | Survey | Net Balance | Monthly | Stock |
+| `ch.kof.inu.ng08.fx.sector_mig.cons_dr.q_ql_ass_bs.balance.d11` | Business Situation Assessment, Manufacturing Durable Goods | KOF | Survey | Net Balance | Monthly | Stock |
+| `ch.kof.inu.ng08.fx.sector_mig.cons_gd.q_ql_ass_bs.balance.d11` | Business Situation Assessment, Manufacturing Consumption Goods | KOF | Survey | Net Balance | Monthly | Stock |
+| `ch.kof.inu.ng08.fx.sector_mig.imd_gd.q_ql_ass_bs.balance.d11` | Business Situation Assessment, Manufacturing Intermediate Goods | KOF | Survey | Net Balance | Monthly | Stock |
+| `SWPMIORDQ` | Purchasing Managers Index, Manufacturing Sector, Backlog of Orders | procure.ch & UBS | Survey | Index (Diffusion) | Monthly | Stock |
+| `SWPMIPROQ` | Purchasing Managers Index, Manufacturing Sector, Output | procure.ch & UBS | Survey | Index (Diffusion) | Monthly | Stock |
+| `SWPURCHSQ` | Purchasing Managers Index, Manufacturing Sector | procure.ch & UBS | Survey | Index (Diffusion) | Monthly | Stock |
+| `ch.ozd.e.wa.index.re.d11` | Switzerland, Export: Total, Real, SA, Index (1997=100) | FOCBS | Trade | Index | Monthly | Flow |
+| `ch.ozd.i.wa.index.re.d11` | Switzerland, Import: Total, Real, SA, Index (1997=100) | FOCBS | Trade | Index | Monthly | Flow |
 
 ## Documentation
 
@@ -137,8 +191,8 @@ which extends the mixed-frequency dynamic factor model of:
 > *Journal of Applied Econometrics*, 40(3), 270-290.
 
 A reference list of the related business-cycle-indicator literature is
-kept in
-[`analysis/benchmarks/literature.md`](https://philippkronenberg.github.io/wai_ind_package/analysis/benchmarks/literature.md).
+in the “References” section of
+[`vignette("waiind")`](https://philippkronenberg.github.io/wai_ind_package/articles/waiind.md).
 
 ## License
 

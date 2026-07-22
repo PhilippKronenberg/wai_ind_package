@@ -12,7 +12,7 @@ these values directly into the calling environment.
 wai_sample_config(
   sample_id = "sample_2025Q4",
   sample_end_date = as.Date("2026-03-07"),
-  output_root = file.path("outputs", "plots_insample", sample_id),
+  output_root = file.path("analysis", "outputs", "plots_insample", sample_id),
   fit_root = "fits",
   fit_rt_dir = file.path(fit_root, "full_RT")
 )

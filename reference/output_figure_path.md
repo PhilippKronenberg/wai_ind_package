@@ -26,6 +26,6 @@ The full file path.
 ## Examples
 
 ``` r
-output_figure_path("history.pdf", figures_dir = "outputs/figures")
-#> [1] "outputs/figures/history.pdf"
+output_figure_path("history.pdf", figures_dir = "analysis/outputs/figures")
+#> [1] "analysis/outputs/figures/history.pdf"
 ```
